@@ -1,19 +1,19 @@
-@model AutoStockIQ.Models.ViewModels.SchoolRegisterViewModel
+@model AutoStockIQ.Models.ViewModels.BusinessRegisterViewModel
 @{
     Layout = "_AuthLayout";
-    ViewData["Title"] = "Register your school";
+    ViewData["Title"] = "Register your business";
 }
 
 <div class="auth-card rounded-4 border bg-white p-4 p-md-5 shadow-sm">
-    <p class="text-uppercase small fw-semibold text-muted mb-1">School portal</p>
-    <h1 class="h4 mb-3">Create your school account</h1>
-    <p class="text-muted small mb-4">One registration per school contact. You will use this email to sign in and place orders with Kweena Ka Bobedi.</p>
-    <form asp-controller="School" asp-action="Register" method="post">
+    <p class="text-uppercase small fw-semibold text-muted mb-1">Business portal</p>
+    <h1 class="h4 mb-3">Create your business account</h1>
+    <p class="text-muted small mb-4">One registration per business contact. You will use this email to sign in and place orders with Kweena Ka Bobedi.</p>
+    <form asp-controller="Business" asp-action="Register" method="post">
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2" role="alert"></div>
         <div class="mb-3">
-            <label asp-for="SchoolName" class="form-label fw-medium"></label>
-            <input asp-for="SchoolName" class="form-control form-control-lg" autocomplete="organization" />
-            <span asp-validation-for="SchoolName" class="text-danger small"></span>
+            <label asp-for="BusinessName" class="form-label fw-medium"></label>
+            <input asp-for="BusinessName" class="form-control form-control-lg" autocomplete="organization" />
+            <span asp-validation-for="BusinessName" class="text-danger small"></span>
         </div>
         <div class="mb-3">
             <label asp-for="Email" class="form-label fw-medium"></label>
@@ -48,7 +48,7 @@
                                 <p class="mb-2"><strong>Protection of Personal Information Act (POPIA)</strong></p>
                                 <p class="mb-1">By consenting, you agree that Kweena Ka Bobedi may:</p>
                                 <ul class="mb-0 ps-3">
-                                    <li>Collect and process your school name, email, and order information</li>
+                                    <li>Collect and process your business name, email, and order information</li>
                                     <li>Store your data securely for order processing and account management</li>
                                     <li>Use your data to provide stock ordering services and communication</li>
                                     <li>Retain your data as required by law and business needs</li>
@@ -60,12 +60,12 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-school btn-lg w-100">Create account</button>
+        <button type="submit" class="btn btn-business btn-lg w-100">Create account</button>
     </form>
     <p class="mt-4 mb-0 small text-center text-muted">
-        <a asp-controller="School" asp-action="Login">Already registered? Sign in</a>
+        <a asp-controller="Business" asp-action="Login">Already registered? Sign in</a>
         <span class="mx-1">·</span>
-        <a asp-controller="Home" asp-action="SchoolPortal">School portal home</a>
+        <a asp-controller="Home" asp-action="BusinessPortal">Business portal home</a>
         <span class="mx-1">·</span>
         <a asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a>
     </p>

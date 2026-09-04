@@ -42,6 +42,11 @@ public class AuthApiController : ControllerBase
             Email = model.Email,
             SchoolName = model.SchoolName,
             EmailConfirmed = true,
+            PopiaConsent = model.PopiaConsent,
+            PopiaConsentDateUtc = DateTime.UtcNow,
+            PopiaConsentIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            IsActive = true,
+            CreatedAtUtc = DateTime.UtcNow
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);

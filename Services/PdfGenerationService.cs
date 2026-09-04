@@ -110,6 +110,11 @@ public class PdfGenerationService
         return memoryStream.ToArray();
     }
 
+    public async Task<byte[]> GenerateSaleReceiptAsync(Sale sale)
+    {
+        return await Task.FromResult(GenerateSaleReceiptPdf(sale, sale.Lines.ToList()));
+    }
+
     public byte[] GenerateStockReportPdf(List<Product> products)
     {
         using var memoryStream = new MemoryStream();
@@ -150,7 +155,7 @@ public class PdfGenerationService
         document.Add(new Paragraph(""));
 
         // Add stock valuation
-        var totalValue = products.Where(p => p.IsActive).Sum(p => p.StockQuantity * p.UnitPrice);
+        var totalValue = products.Where(p => p.IsActive).Sum(p => (double)(p.StockQuantity * p.UnitPrice));
         document.Add(new Paragraph($"Total Stock Valuation: {totalValue:C}").SetFontSize(14).SetBold());
 
         // Add footer

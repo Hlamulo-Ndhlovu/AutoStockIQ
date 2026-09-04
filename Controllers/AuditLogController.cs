@@ -1,57 +1,75 @@
 using AutoStockIQ.Data;
+using AutoStockIQ.Models.ViewModels;
 using AutoStockIQ.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoStockIQ.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AuthConstants.StaffRoles)]
+[Route("audit")]
 public class AuditLogController : Controller
 {
-    private readonly AuditLogService _auditLogService;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApplicationDbContext _db;
 
-    public AuditLogController(AuditLogService auditLogService)
+    public AuditLogController(
+        UserManager<ApplicationUser> userManager,
+        ApplicationDbContext db)
     {
-        _auditLogService = auditLogService;
+        _userManager = userManager;
+        _db = db;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string? userId, string? actionType)
+    [HttpGet("")]
+    public async Task<IActionResult> Index(AuditLogFilterViewModel filter)
     {
-        var logs = await _auditLogService.GetFilteredAuditLogsAsync(startDate, endDate, userId, actionType);
+        ViewData["BodyClass"] = "app-shell app-shell--company";
         
-        var viewModel = new AuditLogFilterViewModel
+        var query = _db.AuditLogs.AsNoTracking();
+        
+        // Apply filters
+        if (!string.IsNullOrEmpty(filter.UserId))
         {
-            AuditLogs = logs,
-            StartDate = startDate,
-            EndDate = endDate,
-            UserId = userId,
-            ActionType = actionType
-        };
-
-        return View(viewModel);
+            query = query.Where(log => log.UserId == filter.UserId);
+        }
+        
+        if (!string.IsNullOrEmpty(filter.ActionType))
+        {
+            query = query.Where(log => log.ActionType == filter.ActionType);
+        }
+        
+        if (!string.IsNullOrEmpty(filter.EntityType))
+        {
+            query = query.Where(log => log.EntityType == filter.EntityType);
+        }
+        
+        if (filter.StartDate.HasValue)
+        {
+            query = query.Where(log => log.TimestampUtc >= filter.StartDate.Value);
+        }
+        
+        if (filter.EndDate.HasValue)
+        {
+            query = query.Where(log => log.TimestampUtc <= filter.EndDate.Value.AddDays(1));
+        }
+        
+        var auditLogs = await query
+            .OrderByDescending(log => log.TimestampUtc)
+            .Take(100)
+            .ToListAsync();
+            
+        // Get available filter options
+        ViewBag.Users = await _userManager.Users.Select(u => new { u.Id, u.Email }).ToListAsync();
+        ViewBag.ActionTypes = await _db.AuditLogs.Select(log => log.ActionType).Distinct().ToListAsync();
+        ViewBag.EntityTypes = await _db.AuditLogs.Select(log => log.EntityType).Distinct().ToListAsync();
+        
+        return View(new AuditLogIndexViewModel
+        {
+            Filter = filter,
+            AuditLogs = auditLogs
+        });
     }
-
-    [HttpGet]
-    public async Task<IActionResult> ExportPdf(DateTime? startDate, DateTime? endDate, string? userId, string? actionType)
-    {
-        var logs = await _auditLogService.GetFilteredAuditLogsAsync(startDate, endDate, userId, actionType);
-        
-        var pdfService = HttpContext.RequestServices.GetRequiredService<PdfGenerationService>();
-        var storageService = HttpContext.RequestServices.GetRequiredService<FirebaseStorageService>();
-        
-        var pdfData = pdfService.GenerateAuditReportPdf(logs, startDate, endDate);
-        var pdfUrl = await storageService.UploadAuditReportPdfAsync(pdfData, startDate, endDate);
-        
-        return Redirect(pdfUrl);
-    }
-}
-
-public class AuditLogFilterViewModel
-{
-    public List<AuditLog> AuditLogs { get; set; } = new();
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
-    public string? UserId { get; set; }
-    public string? ActionType { get; set; }
 }

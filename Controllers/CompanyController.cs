@@ -46,6 +46,17 @@ public class CompanyController : Controller
             .Take(30)
             .ToListAsync();
         ViewBag.RefillAlertCount = await _db.StockRefillAlerts.AsNoTracking().CountAsync();
+        
+        // Additional metrics
+        ViewBag.TotalStockItems = await _db.Products.AsNoTracking().CountAsync(p => p.IsActive);
+        var products = await _db.Products.AsNoTracking()
+            .Where(p => p.IsActive)
+            .ToListAsync();
+        ViewBag.StockValuation = products.Sum(p => p.StockQuantity * p.UnitPrice);
+        ViewBag.TotalSales = await _db.Sales.AsNoTracking().CountAsync();
+        var sales = await _db.Sales.AsNoTracking().ToListAsync();
+        ViewBag.TotalSalesValue = sales.Sum(s => s.TotalValue);
+        
         if (persona == CompanyPortalSession.PersonaSales)
         {
             ViewBag.ProductsForRefill = await _db.Products.AsNoTracking()

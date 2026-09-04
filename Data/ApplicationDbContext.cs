@@ -18,6 +18,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<StockRefillAlert> StockRefillAlerts => Set<StockRefillAlert>();
 
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+
+    public DbSet<Sale> Sales => Set<Sale>();
+
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -57,6 +63,34 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .WithMany()
                 .HasForeignKey(a => a.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Supplier>(e =>
+        {
+            e.Property(s => s.Name).IsRequired().HasMaxLength(200);
+            e.Property(s => s.Email).IsRequired();
+            e.Property(s => s.PhoneNumber).IsRequired();
+        });
+
+        builder.Entity<Sale>(e =>
+        {
+            e.Property(s => s.TotalValue).HasPrecision(18, 2);
+            e.Property(s => s.SaleNumber).IsRequired();
+        });
+
+        builder.Entity<SaleLine>(e =>
+        {
+            e.Property(l => l.UnitPrice).HasPrecision(18, 2);
+            e.Property(l => l.LineTotal).HasPrecision(18, 2);
+        });
+
+        builder.Entity<AuditLog>(e =>
+        {
+            e.Property(a => a.TimestampUtc).IsRequired();
+            e.Property(a => a.UserId).IsRequired();
+            e.Property(a => a.ActionType).IsRequired();
+            e.Property(a => a.EntityType).IsRequired();
+            e.Property(a => a.EntityId).IsRequired();
         });
     }
 }

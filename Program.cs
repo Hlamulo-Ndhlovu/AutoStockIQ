@@ -115,6 +115,7 @@ builder.Services.AddAuthentication()
             ValidAudience = jwt.Audience,
             ValidateLifetime = true,
             RoleClaimType = ClaimTypes.Role,
+            ClockSkew = TimeSpan.Zero // Remove clock skew for stricter validation
         };
     });
 
@@ -150,12 +151,31 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Enforce HTTPS in production
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+else
+{
+    app.UseHttpsRedirection();
+}
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseCors();
+
+// Add security headers
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    context.Response.Headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;";
+    await next();
+});
 
 app.UseSession();
 

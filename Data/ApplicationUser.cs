@@ -6,6 +6,8 @@ public class ApplicationUser : IdentityUser
 {
     public string? SchoolName { get; set; }
     
+    public string? BusinessName { get; set; }
+    
     public bool PopiaConsent { get; set; }
     
     public DateTime PopiaConsentDateUtc { get; set; }

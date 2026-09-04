@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AutoStockIQ.Models.ViewModels;
 
-public class SchoolRegisterViewModel
+public class BusinessRegisterViewModel
 {
     [Required]
     [StringLength(200)]
-    [Display(Name = "School name")]
-    public string SchoolName { get; set; } = string.Empty;
+    [Display(Name = "Business name")]
+    public string BusinessName { get; set; } = string.Empty;
 
     [Required]
     [EmailAddress]

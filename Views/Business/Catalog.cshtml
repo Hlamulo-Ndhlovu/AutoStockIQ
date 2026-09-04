@@ -1,0 +1,59 @@
+@model IEnumerable<AutoStockIQ.Data.Product>
+@{
+    ViewData["Title"] = "Product Catalog";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-1">Product Catalog</h1>
+            <p class="text-muted mb-0">Browse and order products from Kweena Ka Bobedi</p>
+        </div>
+    </div>
+
+    @if (TempData["OrderSuccess"] is string success)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @success
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["OrderError"] is string error)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">@product.Name</h5>
+                        <p class="text-muted small mb-2">@product.Sku</p>
+                        <p class="card-text small mb-3">@product.Category</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-bold">R@product.UnitPrice.ToString("F2")</span>
+                            <span class="badge @(product.StockQuantity > product.ReorderLevel ? "bg-success" : "bg-warning")">
+                                @product.StockQuantity in stock
+                            </span>
+                        </div>
+                        <form asp-action="PlaceOrder" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="ProductId" value="@product.Id" />
+                            <div class="input-group mb-2">
+                                <input type="number" name="Quantity" class="form-control" placeholder="Quantity" min="1" required />
+                                <button type="submit" class="btn btn-primary">Add to Order</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

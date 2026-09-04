@@ -1,14 +1,14 @@
-@model AutoStockIQ.Models.ViewModels.SchoolLoginViewModel
+@model AutoStockIQ.Models.ViewModels.BusinessLoginViewModel
 @{
     Layout = "_AuthLayout";
-    ViewData["Title"] = "School sign in";
+    ViewData["Title"] = "Business sign in";
 }
 
 <div class="auth-card rounded-4 border bg-white p-4 p-md-5 shadow-sm">
-    <p class="text-uppercase small fw-semibold text-muted mb-1">School portal</p>
+    <p class="text-uppercase small fw-semibold text-muted mb-1">Business portal</p>
     <h1 class="h4 mb-3">Welcome back</h1>
-    <p class="text-muted small mb-4">Sign in with the email your school registered. Need an account? Register first — staff use a different portal.</p>
-    <form asp-controller="School" asp-action="Login" method="post">
+    <p class="text-muted small mb-4">Sign in with the email your business registered. Need an account? Register first — staff use a different portal.</p>
+    <form asp-controller="Business" asp-action="Login" method="post">
         <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2" role="alert"></div>
         <div class="mb-3">
@@ -25,12 +25,12 @@
             <input asp-for="RememberMe" class="form-check-input" />
             <label asp-for="RememberMe" class="form-check-label"></label>
         </div>
-        <button type="submit" class="btn btn-school btn-lg w-100">Sign in</button>
+        <button type="submit" class="btn btn-business btn-lg w-100">Sign in</button>
     </form>
     <p class="mt-4 mb-0 small text-center text-muted">
-        <a asp-controller="School" asp-action="Register">Create a school account</a>
+        <a asp-controller="Business" asp-action="Register">Create a business account</a>
         <span class="mx-1">·</span>
-        <a asp-controller="Home" asp-action="SchoolPortal">School portal home</a>
+        <a asp-controller="Home" asp-action="BusinessPortal">Business portal home</a>
         <span class="mx-1">·</span>
         <a asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a>
     </p>

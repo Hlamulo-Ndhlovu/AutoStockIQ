@@ -1,172 +1,153 @@
 using AutoStockIQ.Data;
+using AutoStockIQ.Models.ViewModels;
 using AutoStockIQ.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoStockIQ.Controllers;
 
-[Authorize(Roles = "Admin,Staff")]
+[Authorize(Roles = AuthConstants.StaffRoles)]
+[Route("sales")]
 public class SalesController : Controller
 {
-    private readonly ApplicationDbContext _context;
-    private readonly FirestoreService _firestoreService;
-    private readonly AuditLogService _auditLogService;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApplicationDbContext _db;
     private readonly PdfGenerationService _pdfService;
-    private readonly FirebaseStorageService _storageService;
 
     public SalesController(
-        ApplicationDbContext context,
-        FirestoreService firestoreService,
-        AuditLogService auditLogService,
-        PdfGenerationService pdfService,
-        FirebaseStorageService storageService)
+        UserManager<ApplicationUser> userManager,
+        ApplicationDbContext db,
+        PdfGenerationService pdfService)
     {
-        _context = context;
-        _firestoreService = firestoreService;
-        _auditLogService = auditLogService;
+        _userManager = userManager;
+        _db = db;
         _pdfService = pdfService;
-        _storageService = storageService;
     }
 
-    [HttpGet]
-    public IActionResult Create()
+    [HttpGet("")]
+    [HttpGet("dashboard")]
+    public async Task<IActionResult> Dashboard()
     {
-        var viewModel = new SaleCreateViewModel
-        {
-            Products = _context.Products.Where(p => p.IsActive && p.StockQuantity > 0).ToList()
-        };
-        return View(viewModel);
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+            return Challenge();
+
+        ViewBag.TotalSales = await _db.Sales.AsNoTracking().CountAsync();
+        var sales = await _db.Sales.AsNoTracking().ToListAsync();
+        ViewBag.TotalValue = sales.Sum(s => s.TotalValue);
+        ViewBag.RecentSales = await _db.Sales.AsNoTracking()
+            .Include(s => s.Lines)
+            .OrderByDescending(s => s.CreatedAtUtc)
+            .Take(10)
+            .ToListAsync();
+
+        ViewData["BodyClass"] = "app-shell app-shell--company";
+        return View();
     }
 
-    [HttpPost]
+    [HttpGet("new")]
+    public async Task<IActionResult> NewSale()
+    {
+        ViewData["BodyClass"] = "app-shell app-shell--company";
+        var products = await _db.Products.AsNoTracking()
+            .Where(p => p.IsActive && p.StockQuantity > 0)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
+        return View(products);
+    }
+
+    [HttpPost("create")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(SaleCreateViewModel model)
+    public async Task<IActionResult> CreateSale(CreateSaleViewModel model)
     {
-        if (!ModelState.IsValid || model.SaleLines == null || !model.SaleLines.Any())
-        {
-            model.Products = _context.Products.Where(p => p.IsActive && p.StockQuantity > 0).ToList();
-            return View(model);
-        }
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+            return Challenge();
 
-        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
-        var userName = User.Identity?.Name ?? "";
-        var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "";
+        if (!ModelState.IsValid)
+            return RedirectToAction(nameof(NewSale));
 
         // Generate sale number
-        var saleNumber = $"SL-{DateTime.UtcNow:yyyyMMdd}-{new Random().Next(1000, 9999)}";
+        var saleCount = await _db.Sales.CountAsync() + 1;
+        var saleNumber = $"SL-{saleCount:D4}";
 
-        var sale = new Sale
-        {
-            SaleNumber = saleNumber,
-            CustomerId = model.CustomerId,
-            CustomerName = model.CustomerName,
-            CustomerType = model.CustomerType,
-            ProcessedByUserId = userId,
-            ProcessedByUserName = userName,
-            CreatedAtUtc = DateTime.UtcNow
-        };
-
-        var saleLines = new List<SaleLine>();
+        // Calculate total and create sale lines
+        var lines = new List<SaleLine>();
         decimal totalValue = 0;
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
+        foreach (var item in model.Items)
         {
-            foreach (var line in model.SaleLines.Where(l => l.Quantity > 0))
+            var product = await _db.Products.FindAsync(item.ProductId);
+            if (product is null || product.StockQuantity < item.Quantity)
             {
-                var product = await _context.Products.FindAsync(line.ProductId);
-                if (product == null || product.StockQuantity < line.Quantity)
-                {
-                    ModelState.AddModelError("", $"Insufficient stock for {product?.Name ?? "product"}");
-                    model.Products = _context.Products.Where(p => p.IsActive && p.StockQuantity > 0).ToList();
-                    return View(model);
-                }
-
-                // Deduct stock
-                product.StockQuantity -= line.Quantity;
-
-                var saleLine = new SaleLine
-                {
-                    ProductId = product.Id,
-                    ProductSku = product.Sku,
-                    ProductName = product.Name,
-                    Quantity = line.Quantity,
-                    UnitPrice = product.UnitPrice,
-                    LineTotal = line.Quantity * product.UnitPrice
-                };
-
-                saleLines.Add(saleLine);
-                totalValue += saleLine.LineTotal;
-
-                // Log stock movement
-                await _auditLogService.LogStockMovementAsync(
-                    userId, userName, userEmail,
-                    product.Id, product.Sku, -line.Quantity,
-                    $"Sale {saleNumber}"
-                );
+                TempData["SaleError"] = $"Insufficient stock for {product?.Name ?? "product"}";
+                return RedirectToAction(nameof(NewSale));
             }
 
-            sale.TotalValue = totalValue;
-            sale.Lines = saleLines;
+            var lineTotal = item.Quantity * product.UnitPrice;
+            totalValue += lineTotal;
 
-            // Save sale to Firestore
-            var saleId = await _firestoreService.CreateSaleAsync(sale);
+            lines.Add(new SaleLine
+            {
+                Id = Guid.NewGuid().ToString(),
+                SaleId = saleNumber,
+                ProductId = product.Id,
+                ProductSku = product.Sku,
+                ProductName = product.Name,
+                Quantity = item.Quantity,
+                UnitPrice = product.UnitPrice,
+                LineTotal = lineTotal
+            });
 
-            // Save stock changes to SQL
-            await _context.SaveChangesAsync();
-
-            // Log sale
-            await _auditLogService.LogSaleAsync(userId, userName, userEmail, saleNumber, totalValue);
-
-            await transaction.CommitAsync();
-
-            // Generate PDF receipt
-            var pdfData = _pdfService.GenerateSaleReceiptPdf(sale, saleLines);
-            var pdfUrl = await _storageService.UploadSaleReceiptPdfAsync(saleNumber, pdfData);
-
-            TempData["Success"] = $"Sale {saleNumber} completed successfully. Receipt: {pdfUrl}";
-            return RedirectToAction(nameof(Index));
+            // Update stock
+            product.StockQuantity -= item.Quantity;
         }
-        catch
+
+        // Create sale
+        var sale = new Sale
         {
-            await transaction.RollbackAsync();
-            ModelState.AddModelError("", "An error occurred while processing the sale.");
-            model.Products = _context.Products.Where(p => p.IsActive && p.StockQuantity > 0).ToList();
-            return View(model);
-        }
+            Id = Guid.NewGuid().ToString(),
+            SaleNumber = saleNumber,
+            CustomerName = model.CustomerName,
+            CustomerType = model.CustomerType,
+            CreatedAtUtc = DateTime.UtcNow,
+            TotalValue = totalValue,
+            ProcessedByUserId = user.Id,
+            ProcessedByUserName = user.Email ?? "Unknown",
+            Lines = lines
+        };
+
+        await _db.Sales.AddAsync(sale);
+        await _db.SaveChangesAsync();
+
+        TempData["SaleSuccess"] = $"Sale {saleNumber} created successfully. Total: R{totalValue:F2}";
+        return RedirectToAction(nameof(Dashboard));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index()
+    [HttpGet("history")]
+    public async Task<IActionResult> History()
     {
-        var sales = await _firestoreService.GetAllSalesAsync();
+        ViewData["BodyClass"] = "app-shell app-shell--company";
+        var sales = await _db.Sales.AsNoTracking()
+            .Include(s => s.Lines)
+            .OrderByDescending(s => s.CreatedAtUtc)
+            .ToListAsync();
         return View(sales);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Details(string id)
+    [HttpGet("receipt/{id}")]
+    public async Task<IActionResult> Receipt(string id)
     {
-        var sale = await _firestoreService.GetSaleAsync(id);
-        if (sale == null)
-        {
+        var sale = await _db.Sales.AsNoTracking()
+            .Include(s => s.Lines)
+            .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (sale is null)
             return NotFound();
-        }
-        return View(sale);
+
+        var pdfBytes = await _pdfService.GenerateSaleReceiptAsync(sale);
+        return File(pdfBytes, "application/pdf", $"Receipt_{sale.SaleNumber}.pdf");
     }
-}
-
-public class SaleCreateViewModel
-{
-    public string CustomerId { get; set; } = string.Empty;
-    public string CustomerName { get; set; } = string.Empty;
-    public string CustomerType { get; set; } = "School"; // School or Business
-    public List<SaleLineItem> SaleLines { get; set; } = new();
-    public List<Product> Products { get; set; } = new();
-}
-
-public class SaleLineItem
-{
-    public int ProductId { get; set; }
-    public int Quantity { get; set; }
 }

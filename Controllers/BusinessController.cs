@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoStockIQ.Controllers;
 
-[Route("school")]
-public class SchoolController : Controller
+[Route("business")]
+public class BusinessController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _db;
     private readonly OrderPlacementService _orders;
 
-    public SchoolController(
+    public BusinessController(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
         ApplicationDbContext db,
@@ -28,7 +28,7 @@ public class SchoolController : Controller
         _orders = orders;
     }
 
-    [Authorize(Roles = AuthConstants.SchoolRole)]
+    [Authorize(Roles = AuthConstants.BusinessUserRole)]
     [HttpGet("")]
     [HttpGet("dashboard")]
     public async Task<IActionResult> Dashboard()
@@ -36,7 +36,7 @@ public class SchoolController : Controller
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
             return Challenge();
-        ViewBag.SchoolName = user.SchoolName;
+        ViewBag.BusinessName = user.BusinessName;
         ViewBag.Email = user.Email;
         ViewBag.SubmittedOrders = await _db.SchoolOrders.AsNoTracking()
             .CountAsync(o => o.SchoolUserId == user.Id && o.Status == SchoolOrderStatus.Submitted);
@@ -46,31 +46,18 @@ public class SchoolController : Controller
             .CountAsync(o => o.SchoolUserId == user.Id && o.Status == SchoolOrderStatus.Fulfilled);
         ViewBag.CancelledOrders = await _db.SchoolOrders.AsNoTracking()
             .CountAsync(o => o.SchoolUserId == user.Id && o.Status == SchoolOrderStatus.Cancelled);
-        
-        // Additional metrics
-        var orders = await _db.SchoolOrders.AsNoTracking()
-            .Where(o => o.SchoolUserId == user.Id)
-            .ToListAsync();
-        ViewBag.TotalOrderValue = orders.Sum(o => o.TotalValue);
-        ViewBag.RecentOrders = await _db.SchoolOrders.AsNoTracking()
-            .Where(o => o.SchoolUserId == user.Id)
-            .Include(o => o.Lines).ThenInclude(l => l.Product)
-            .OrderByDescending(o => o.CreatedAtUtc)
-            .Take(5)
-            .ToListAsync();
-        
-        ViewData["BodyClass"] = "app-shell app-shell--school";
+        ViewData["BodyClass"] = "app-shell app-shell--business";
         return View("Dashboard");
     }
 
-    [Authorize(Roles = AuthConstants.SchoolRole)]
+    [Authorize(Roles = AuthConstants.BusinessUserRole)]
     [HttpGet("orders")]
     public async Task<IActionResult> Orders()
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
             return Challenge();
-        ViewData["BodyClass"] = "app-shell app-shell--school";
+        ViewData["BodyClass"] = "app-shell app-shell--business";
         var orders = await _db.SchoolOrders.AsNoTracking()
             .Where(o => o.SchoolUserId == user.Id)
             .Include(o => o.Lines).ThenInclude(l => l.Product)
@@ -79,16 +66,16 @@ public class SchoolController : Controller
         return View(orders);
     }
 
-    [Authorize(Roles = AuthConstants.SchoolRole)]
+    [Authorize(Roles = AuthConstants.BusinessUserRole)]
     [HttpGet("catalog")]
     public async Task<IActionResult> Catalog()
     {
-        ViewData["BodyClass"] = "app-shell app-shell--school";
+        ViewData["BodyClass"] = "app-shell app-shell--business";
         var products = await _db.Products.AsNoTracking().OrderBy(p => p.Name).ToListAsync();
         return View(products);
     }
 
-    [Authorize(Roles = AuthConstants.SchoolRole)]
+    [Authorize(Roles = AuthConstants.BusinessUserRole)]
     [HttpPost("order")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> PlaceOrder(PlaceSchoolOrderViewModel model)
@@ -120,16 +107,16 @@ public class SchoolController : Controller
     [HttpGet("register")]
     public IActionResult Register()
     {
-        ViewData["AuthTheme"] = "school";
+        ViewData["AuthTheme"] = "business";
         return View();
     }
 
     [AllowAnonymous]
     [HttpPost("register")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(SchoolRegisterViewModel model)
+    public async Task<IActionResult> Register(BusinessRegisterViewModel model)
     {
-        ViewData["AuthTheme"] = "school";
+        ViewData["AuthTheme"] = "business";
         
         // Manual POPIA consent validation
         if (!model.PopiaConsent)
@@ -144,7 +131,7 @@ public class SchoolController : Controller
         {
             UserName = model.Email,
             Email = model.Email,
-            SchoolName = model.SchoolName,
+            BusinessName = model.BusinessName,
             EmailConfirmed = true,
             PopiaConsent = model.PopiaConsent,
             PopiaConsentDateUtc = DateTime.UtcNow,
@@ -161,7 +148,7 @@ public class SchoolController : Controller
             return View(model);
         }
 
-        await _userManager.AddToRoleAsync(user, AuthConstants.SchoolRole);
+        await _userManager.AddToRoleAsync(user, AuthConstants.BusinessUserRole);
         await _signInManager.SignInAsync(user, isPersistent: false);
         return RedirectToAction(nameof(Dashboard));
     }
@@ -171,22 +158,22 @@ public class SchoolController : Controller
     public IActionResult Login(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
-        ViewData["AuthTheme"] = "school";
+        ViewData["AuthTheme"] = "business";
         return View();
     }
 
     [AllowAnonymous]
     [HttpPost("login")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(SchoolLoginViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Login(BusinessLoginViewModel model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
-        ViewData["AuthTheme"] = "school";
+        ViewData["AuthTheme"] = "business";
         if (!ModelState.IsValid)
             return View(model);
 
         var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user is null || !await _userManager.IsInRoleAsync(user, AuthConstants.SchoolRole))
+        if (user is null || !await _userManager.IsInRoleAsync(user, AuthConstants.BusinessUserRole))
         {
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
@@ -206,12 +193,12 @@ public class SchoolController : Controller
         return RedirectToAction(nameof(Dashboard));
     }
 
-    [Authorize(Roles = AuthConstants.SchoolRole)]
+    [Authorize(Roles = AuthConstants.BusinessUserRole)]
     [HttpPost("logout")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction(nameof(HomeController.SchoolPortal), "Home");
+        return RedirectToAction(nameof(HomeController.BusinessPortal), "Home");
     }
 }

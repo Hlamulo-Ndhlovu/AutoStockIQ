@@ -12,6 +12,10 @@ public class SchoolRegisterRequest
 
     [Required, StringLength(100, MinimumLength = 8)]
     public string Password { get; set; } = string.Empty;
+
+    [Required]
+    [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the POPIA consent to continue.")]
+    public bool PopiaConsent { get; set; }
 }
 
 public class LoginRequest

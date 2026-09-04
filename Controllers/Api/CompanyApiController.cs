@@ -78,9 +78,10 @@ public class CompanyApiController : ControllerBase
             ? $"{(DateTime.UtcNow - t).TotalHours:0} h waiting"
             : "—";
 
-        var stockValuation = await _db.Products.AsNoTracking()
+        var products = await _db.Products.AsNoTracking()
             .Where(p => p.IsActive)
-            .SumAsync(p => p.StockQuantity * p.UnitPrice, cancellationToken);
+            .ToListAsync(cancellationToken);
+        var stockValuation = products.Sum(p => p.StockQuantity * p.UnitPrice);
 
         IReadOnlyList<PendingOrderDto>? pendingOrders = null;
         IReadOnlyList<DecidedOrderDto>? recent = null;

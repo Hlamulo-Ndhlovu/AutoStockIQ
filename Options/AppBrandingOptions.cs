@@ -50,6 +50,7 @@ public class AppColorTokens
 
     public string AuthCompanyPageBg { get; set; } = "#0C0A09";
     public string AuthSchoolPageBg { get; set; } = "#092F26";
+    public string AuthBusinessPageBg { get; set; } = "#1E3A5F";
 
     public string AuthAsideCompanyText { get; set; } = "#FFEDD5";
 
@@ -58,6 +59,9 @@ public class AppColorTokens
 
     /// <summary>Comma-separated RGB (success green) for school-tinted shadows.</summary>
     public string RgbTeal { get; set; } = "21, 128, 61";
+
+    /// <summary>Comma-separated RGB (business blue) for business-tinted shadows.</summary>
+    public string RgbBusiness { get; set; } = "30, 58, 95";
 }
 
 public class AppMobileLinks

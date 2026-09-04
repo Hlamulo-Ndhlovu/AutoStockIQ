@@ -6,8 +6,6 @@ public class Sale
     
     public string SaleNumber { get; set; } = string.Empty;
     
-    public string CustomerId { get; set; } = string.Empty;
-    
     public string CustomerName { get; set; } = string.Empty;
     
     public string CustomerType { get; set; } = string.Empty; // "School" or "Business"

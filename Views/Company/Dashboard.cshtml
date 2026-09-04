@@ -9,6 +9,10 @@
     var statAccepted = Convert.ToInt32(ViewBag.StatAccepted ?? 0);
     var statRejectedMonth = Convert.ToInt32(ViewBag.StatRejectedMonth ?? 0);
     var oldestPendingLabel = ViewBag.OldestPendingLabel as string ?? "—";
+    var totalStockItems = Convert.ToInt32(ViewBag.TotalStockItems ?? 0);
+    var stockValuation = Convert.ToDecimal(ViewBag.StockValuation ?? 0);
+    var totalSales = Convert.ToInt32(ViewBag.TotalSales ?? 0);
+    var totalSalesValue = Convert.ToDecimal(ViewBag.TotalSalesValue ?? 0);
 }
 
 <div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
@@ -75,9 +79,40 @@
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Stock Valuation</p>
+                <p class="stat-value mb-0">R@stockValuation.ToString("N2")</p>
+                <p class="stat-hint small mb-0 mt-2">Total value of all inventory.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Total Stock Items</p>
+                <p class="stat-value mb-0">@totalStockItems</p>
+                <p class="stat-hint small mb-0 mt-2">Active products in catalogue.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 g-xl-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
                 <p class="stat-label mb-1">Rejected this month</p>
                 <p class="stat-value mb-0">@statRejectedMonth</p>
                 <p class="stat-hint small mb-0 mt-2">Declined orders (UTC month).</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Total Sales</p>
+                <p class="stat-value mb-0">@totalSales</p>
+                <p class="stat-hint small mb-0 mt-2">Completed sales transactions.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Sales Revenue</p>
+                <p class="stat-value mb-0">R@totalSalesValue.ToString("N2")</p>
+                <p class="stat-hint small mb-0 mt-2">Total sales value.</p>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
@@ -182,30 +217,30 @@ else if (isSales)
     <div class="row g-3 g-xl-4 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card stat-card--company rounded-4 p-4 h-100">
-                <p class="stat-label mb-1">SKUs / lines sold</p>
-                <p class="stat-value mb-0">—</p>
-                <p class="stat-hint small mb-0 mt-2">Active catalogue items available to schools.</p>
+                <p class="stat-label mb-1">Stock Items</p>
+                <p class="stat-value mb-0">@totalStockItems</p>
+                <p class="stat-hint small mb-0 mt-2">Active catalogue items available.</p>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card stat-card--company rounded-4 p-4 h-100">
-                <p class="stat-label mb-1">Quotes &amp; baskets</p>
-                <p class="stat-value mb-0">—</p>
-                <p class="stat-hint small mb-0 mt-2">Draft and sent quotes tied to schools.</p>
+                <p class="stat-label mb-1">Stock Valuation</p>
+                <p class="stat-value mb-0">R@stockValuation.ToString("N2")</p>
+                <p class="stat-hint small mb-0 mt-2">Total value of all inventory.</p>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card stat-card--company rounded-4 p-4 h-100">
-                <p class="stat-label mb-1">Schools in your patch</p>
-                <p class="stat-value mb-0">—</p>
-                <p class="stat-hint small mb-0 mt-2">Accounts you support for reorders and upsell.</p>
+                <p class="stat-label mb-1">Total Sales</p>
+                <p class="stat-value mb-0">@totalSales</p>
+                <p class="stat-hint small mb-0 mt-2">Completed sales transactions.</p>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card stat-card--company rounded-4 p-4 h-100">
-                <p class="stat-label mb-1">Promotions / packs</p>
-                <p class="stat-value mb-0">—</p>
-                <p class="stat-hint small mb-0 mt-2">Bundles and term deals you are selling in.</p>
+                <p class="stat-label mb-1">Sales Revenue</p>
+                <p class="stat-value mb-0">R@totalSalesValue.ToString("N2")</p>
+                <p class="stat-hint small mb-0 mt-2">Total sales value.</p>
             </div>
         </div>
     </div>

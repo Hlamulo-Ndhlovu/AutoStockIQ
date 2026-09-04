@@ -48,6 +48,17 @@ namespace AutoStockIQ.Controllers
             return View();
         }
 
+        /// <summary>Business-only entry: registration and sign-in. No company login on this path.</summary>
+        public IActionResult BusinessPortal()
+        {
+            return View();
+        }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
