@@ -1,0 +1,44 @@
+@using AutoStockIQ.Options
+@inject Microsoft.Extensions.Options.IOptions<AppBrandingOptions> AppBrandingOptions
+@{
+    var m = AppBrandingOptions.Value.Mobile;
+    var hasIos = !string.IsNullOrWhiteSpace(m.IosAppStoreUrl);
+    var hasAndroid = !string.IsNullOrWhiteSpace(m.AndroidPlayStoreUrl);
+    var hasUniversal = !string.IsNullOrWhiteSpace(m.UniversalLinkBase);
+    var variant = ViewData["MobileWebChoiceVariant"] as string ?? "landing";
+    var cardClass = variant == "compact" ? "mobile-web-choice mobile-web-choice--compact" : "mobile-web-choice";
+}
+<section class="@cardClass rounded-4 border mb-4" aria-label="Choose web or mobile app">
+    <div class="mobile-web-choice__inner p-4 p-md-4">
+        <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+            <div>
+                <h2 class="h6 text-uppercase fw-bold mb-2 mobile-web-choice__kicker">Web or mobile</h2>
+                <p class="mb-0 text-muted small fw-medium" style="max-width: 40rem;">@m.Tagline</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                @if (hasIos)
+                {
+                    <a class="btn btn-sm btn-outline-dark fw-semibold" href="@m.IosAppStoreUrl" target="_blank" rel="noopener noreferrer">App Store</a>
+                }
+                @if (hasAndroid)
+                {
+                    <a class="btn btn-sm btn-outline-dark fw-semibold" href="@m.AndroidPlayStoreUrl" target="_blank" rel="noopener noreferrer">Google Play</a>
+                }
+                @if (hasUniversal)
+                {
+                    <a class="btn btn-sm btn-dark fw-semibold" href="@m.UniversalLinkBase.TrimEnd('/')/" target="_blank" rel="noopener noreferrer">Open app</a>
+                }
+            </div>
+        </div>
+        @if (!hasIos && !hasAndroid && !hasUniversal)
+        {
+            <p class="small text-muted mb-0 mt-3 mb-0">
+                Store links are not configured yet. Mobile apps can call <code class="small">GET /api/app/info</code> for branding and link placeholders. Add <strong>AppBranding:Mobile</strong> URLs in configuration when builds are published.
+            </p>
+        }
+        else
+        {
+            <p class="small text-muted mb-0 mt-3 mb-0">Prefer the full experience in the browser? Continue with the portal buttons above — your account is the same.</p>
+        }
+    </div>
+</section>

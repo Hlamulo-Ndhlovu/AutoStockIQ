@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "School dashboard";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">School portal</p>
+        <h1 class="h3 mb-1 landing-font-serif">@ViewBag.SchoolName</h1>
+        <p class="text-muted mb-0 small">Signed in as <strong>@ViewBag.Email</strong></p>
+    </div>
+    <form asp-controller="School" asp-action="Logout" method="post" class="m-0">
+        <button type="submit" class="btn btn-outline-secondary">Sign out</button>
+    </form>
+</div>
+
+<div class="row g-3 g-xl-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-card--school rounded-4 p-4 h-100">
+            <p class="stat-label mb-1">Submitted</p>
+            <p class="stat-value mb-0">@ViewBag.SubmittedOrders</p>
+            <p class="stat-hint small mb-0 mt-2">Awaiting supplier approval (same as mobile app).</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-card--school rounded-4 p-4 h-100">
+            <p class="stat-label mb-1">Approved</p>
+            <p class="stat-value mb-0">@ViewBag.ApprovedOrders</p>
+            <p class="stat-hint small mb-0 mt-2">Approved orders ready for fulfilment.</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-card--school rounded-4 p-4 h-100">
+            <p class="stat-label mb-1">Fulfilled</p>
+            <p class="stat-value mb-0">@ViewBag.FulfilledOrders</p>
+            <p class="stat-hint small mb-0 mt-2">Completed orders delivered to school.</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-card--school rounded-4 p-4 h-100">
+            <p class="stat-label mb-1">Cancelled</p>
+            <p class="stat-value mb-0">@ViewBag.CancelledOrders</p>
+            <p class="stat-hint small mb-0 mt-2">Declined orders (stock restored where applicable).</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+                <h2 class="h5 mb-3">Continue ordering</h2>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-success btn-sm" asp-controller="School" asp-action="Catalog">Browse catalogue</a>
+                    <a class="btn btn-outline-success btn-sm" asp-controller="School" asp-action="Orders">My orders</a>
+                </div>
+                <p class="text-muted small mt-3 mb-0">Orders reduce live stock. When stock reaches the supplier&rsquo;s reorder level, their Admin and Sales teams see a refill alert.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+                <h2 class="h5 mb-3">Announcements</h2>
+                <p class="text-muted small mb-0">Use this panel for supplier messages, term deadlines, and stock notices.</p>
+            </div>
+        </div>
+    </div>
+</div>

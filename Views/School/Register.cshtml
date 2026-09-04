@@ -1,0 +1,51 @@
+@model AutoStockIQ.Models.ViewModels.SchoolRegisterViewModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Register your school";
+}
+
+<div class="auth-card rounded-4 border bg-white p-4 p-md-5 shadow-sm">
+    <p class="text-uppercase small fw-semibold text-muted mb-1">School portal</p>
+    <h1 class="h4 mb-3">Create your school account</h1>
+    <p class="text-muted small mb-4">One registration per school contact. You will use this email to sign in and place orders with Kweena Ka Bobedi.</p>
+    <form asp-controller="School" asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2" role="alert"></div>
+        <div class="mb-3">
+            <label asp-for="SchoolName" class="form-label fw-medium"></label>
+            <input asp-for="SchoolName" class="form-control form-control-lg" autocomplete="organization" />
+            <span asp-validation-for="SchoolName" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label fw-medium"></label>
+            <input asp-for="Email" class="form-control form-control-lg" autocomplete="email" />
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label fw-medium"></label>
+            <input asp-for="Password" class="form-control form-control-lg" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="text-danger small"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="ConfirmPassword" class="form-label fw-medium"></label>
+            <input asp-for="ConfirmPassword" class="form-control form-control-lg" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+        </div>
+        <div class="mb-4">
+            <div class="form-check">
+                <input asp-for="PopiaConsent" class="form-check-input" />
+                <label asp-for="PopiaConsent" class="form-check-label small"></label>
+            </div>
+            <span asp-validation-for="PopiaConsent" class="text-danger small"></span>
+        </div>
+        <button type="submit" class="btn btn-school btn-lg w-100">Create account</button>
+    </form>
+    <p class="mt-4 mb-0 small text-center text-muted">
+        <a asp-controller="School" asp-action="Login">Already registered? Sign in</a>
+        <span class="mx-1">·</span>
+        <a asp-controller="Home" asp-action="SchoolPortal">School portal home</a>
+    </p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

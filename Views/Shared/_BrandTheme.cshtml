@@ -1,0 +1,41 @@
+@using AutoStockIQ.Options
+@inject Microsoft.Extensions.Options.IOptions<AppBrandingOptions> AppBrandingOptions
+@{
+    var c = AppBrandingOptions.Value.Colors;
+}
+<meta name="theme-color" content="@c.NavyMid" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<style id="asq-brand-theme">
+ :root {
+    --asq-navy: @c.Navy;
+    --asq-navy-mid: @c.NavyMid;
+    --asq-navy-bright: @c.NavyBright;
+    --asq-navy-deep: @c.NavyDeep;
+    --asq-navy-glow: @c.NavyGlow;
+    --asq-navy-hover: @c.NavyHover;
+    --asq-navy-auth-end: @c.NavyAuthEnd;
+    --asq-teal: @c.Teal;
+    --asq-teal-light: @c.TealLight;
+    --asq-teal-dark: @c.TealDark;
+    --asq-teal-abyss: @c.TealAbyss;
+    --asq-accent: @c.Accent;
+    --asq-accent-soft: @c.AccentSoft;
+    --asq-sage: @c.Sage;
+    --asq-paper: @c.Paper;
+    --asq-ink: @c.Ink;
+    --asq-muted: @c.Muted;
+    --asq-border: @c.Border;
+    --asq-surface-0: @c.Surface0;
+    --asq-surface-1: @c.Surface1;
+    --asq-surface-2: @c.Surface2;
+    --asq-surface-3: @c.Surface3;
+    --asq-auth-company-page-bg: @c.AuthCompanyPageBg;
+    --asq-auth-school-page-bg: @c.AuthSchoolPageBg;
+    --asq-auth-aside-text-company: @c.AuthAsideCompanyText;
+    --asq-rgb-navy-mid: @c.RgbNavyMid;
+    --asq-rgb-teal: @c.RgbTeal;
+    --asq-shadow: 0 4px 24px rgba(var(--asq-rgb-navy-mid), 0.09);
+    --asq-shadow-lg: 0 20px 50px rgba(var(--asq-rgb-navy-mid), 0.11);
+    --asq-shadow-glow: 0 0 40px rgba(var(--asq-rgb-navy-mid), 0.22);
+  }
+</style>

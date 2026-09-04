@@ -1,0 +1,281 @@
+@{
+    var persona = ViewBag.PortalPersona as string;
+    var isAdmin = persona == CompanyPortalSession.PersonaAdmin;
+    var isSales = persona == CompanyPortalSession.PersonaSales;
+    ViewData["Title"] = isAdmin ? "Administrator dashboard" : isSales ? "Sales dashboard" : "Supplier dashboard";
+    var pendingOrders = ViewBag.PendingOrders as IList<SchoolOrder>;
+    var decidedOrders = ViewBag.DecidedOrders as IList<SchoolOrder>;
+    var statPending = Convert.ToInt32(ViewBag.StatPending ?? 0);
+    var statAccepted = Convert.ToInt32(ViewBag.StatAccepted ?? 0);
+    var statRejectedMonth = Convert.ToInt32(ViewBag.StatRejectedMonth ?? 0);
+    var oldestPendingLabel = ViewBag.OldestPendingLabel as string ?? "—";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">Kweena Ka Bobedi</p>
+        @if (isAdmin)
+        {
+            <h1 class="h3 mb-1 landing-font-serif">Administrator dashboard</h1>
+            <p class="text-muted mb-0 small">Review school orders, then <strong>accept</strong> or <strong>reject</strong> them (rejecting restores stock). Refill alerts are <strong>read-only</strong> here — <strong>Sales</strong> records refills.</p>
+        }
+        else if (isSales)
+        {
+            <h1 class="h3 mb-1 landing-font-serif">Sales &amp; what we sell</h1>
+            <p class="text-muted mb-0 small">Manage the <strong>catalogue</strong>, <strong>pricing</strong>, and what is <strong>sold</strong> — and <strong>record stock refills</strong> when deliveries arrive (admins only see alerts).</p>
+        }
+        else
+        {
+            <h1 class="h3 mb-1 landing-font-serif">Operations overview</h1>
+        }
+        <p class="text-muted mb-0 small mt-2">
+            Signed in as <strong>@ViewBag.Email</strong>
+            @if (isAdmin)
+            {
+                <span class="badge rounded-pill bg-primary-subtle text-primary ms-1">Administrator</span>
+            }
+            else if (isSales)
+            {
+                <span class="badge rounded-pill bg-success-subtle text-success ms-1">Sales</span>
+            }
+        </p>
+    </div>
+    <form asp-controller="Company" asp-action="Logout" method="post" class="m-0">
+        <button type="submit" class="btn btn-outline-secondary">Sign out</button>
+    </form>
+</div>
+
+@if (TempData["CompanyError"] is string cerr && !string.IsNullOrEmpty(cerr))
+{
+    <div class="alert alert-danger rounded-4" role="alert">@cerr</div>
+}
+@if (TempData["CompanySuccess"] is string cok && !string.IsNullOrEmpty(cok))
+{
+    <div class="alert alert-success rounded-4" role="alert">@cok</div>
+}
+
+<partial name="_StockRefillAlerts" />
+
+@if (isAdmin)
+{
+    <div class="row g-3 g-xl-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Awaiting your decision</p>
+                <p class="stat-value mb-0">@statPending</p>
+                <p class="stat-hint small mb-0 mt-2">School orders pending accept or reject.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Accepted (all time)</p>
+                <p class="stat-value mb-0">@statAccepted</p>
+                <p class="stat-hint small mb-0 mt-2">Approved orders ready for picking and dispatch.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Rejected this month</p>
+                <p class="stat-value mb-0">@statRejectedMonth</p>
+                <p class="stat-hint small mb-0 mt-2">Declined orders (UTC month).</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Oldest pending</p>
+                <p class="stat-value mb-0 small">@oldestPendingLabel</p>
+                <p class="stat-hint small mb-0 mt-2">Longest wait in the current queue.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Order queue</h2>
+                    @if (pendingOrders is { Count: > 0 })
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 table-premium">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">School</th>
+                                        <th scope="col">Lines</th>
+                                        <th scope="col" class="text-nowrap">Placed (UTC)</th>
+                                        <th scope="col" class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var o in pendingOrders)
+                                {
+                                    var schoolEmail = o.SchoolUser?.Email ?? o.SchoolUserId;
+                                    var linesSummary = string.Join(", ", o.Lines.Select(l => $"{l.Quantity}× {(l.Product?.Sku ?? $"#{l.ProductId}")}"));
+                                    <tr>
+                                        <td class="fw-semibold">@o.Id</td>
+                                        <td class="small">@schoolEmail</td>
+                                        <td class="small text-muted">@linesSummary</td>
+                                        <td class="small text-nowrap">@o.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                                        <td class="text-end">
+                                            <form asp-controller="Company" asp-action="ApproveOrder" method="post" class="d-inline">
+                                                <input type="hidden" name="OrderId" value="@o.Id" />
+                                                <button type="submit" class="btn btn-primary btn-sm">Accept</button>
+                                            </form>
+                                            <form asp-controller="Company" asp-action="RejectOrder" method="post" class="d-inline ms-1">
+                                                <input type="hidden" name="OrderId" value="@o.Id" />
+                                                <input type="hidden" name="Note" value="" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="var f=this.form;var n=prompt('Optional note for this rejection (cancel to abort):');if(n===null)return false;f.elements.namedItem('Note').value=n||'';">Reject</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-0">No orders are waiting for a decision.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Recent decisions</h2>
+                    @if (decidedOrders is { Count: > 0 })
+                    {
+                        <ul class="list-unstyled mb-0 small">
+                            @foreach (var o in decidedOrders)
+                            {
+                                var schoolEmail = o.SchoolUser?.Email ?? o.SchoolUserId;
+                                var badgeClass = o.Status == SchoolOrderStatus.Accepted ? "bg-success" : "bg-danger";
+                                var decided = o.DecidedAtUtc?.ToString("yyyy-MM-dd HH:mm") ?? "—";
+                                <li class="border-bottom pb-3 mb-3">
+                                    <div class="d-flex flex-wrap justify-content-between gap-2 align-items-start">
+                                        <span class="fw-semibold">Order #@o.Id</span>
+                                        <span class="badge @badgeClass">@o.Status</span>
+                                    </div>
+                                    <div class="text-muted">@schoolEmail</div>
+                                    <div class="text-muted">@decided UTC</div>
+                                    @if (!string.IsNullOrEmpty(o.DecisionNote))
+                                    {
+                                        <div class="mt-1 fst-italic">@o.DecisionNote</div>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-0">No completed decisions yet.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (isSales)
+{
+    <div class="row g-3 g-xl-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">SKUs / lines sold</p>
+                <p class="stat-value mb-0">—</p>
+                <p class="stat-hint small mb-0 mt-2">Active catalogue items available to schools.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Quotes &amp; baskets</p>
+                <p class="stat-value mb-0">—</p>
+                <p class="stat-hint small mb-0 mt-2">Draft and sent quotes tied to schools.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Schools in your patch</p>
+                <p class="stat-value mb-0">—</p>
+                <p class="stat-hint small mb-0 mt-2">Accounts you support for reorders and upsell.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+                <p class="stat-label mb-1">Promotions / packs</p>
+                <p class="stat-value mb-0">—</p>
+                <p class="stat-hint small mb-0 mt-2">Bundles and term deals you are selling in.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 border-start border-4 border-success">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-2">Record a stock refill</h2>
+                    <p class="text-muted small mb-3">Only <strong>Sales</strong> increases on-hand inventory when stock is received. Use this for any SKU — not only items in the alert list.</p>
+                    @{
+                        var products = ViewBag.ProductsForRefill as IList<AutoStockIQ.Data.Product>;
+                    }
+                    @if (products is { Count: > 0 })
+                    {
+                        <form asp-controller="Company" asp-action="RefillStock" method="post" class="row g-2 align-items-end">
+                            <div class="col-md-6 col-lg-5">
+                                <label class="form-label small fw-medium" for="refillProduct">Product</label>
+                                <select id="refillProduct" name="ProductId" class="form-select" required>
+                                    @foreach (var p in products)
+                                    {
+                                        <option value="@p.Id">@p.Name (@p.Sku) — @p.StockQuantity in stock</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-lg-2">
+                                <label class="form-label small fw-medium" for="refillQty">Units to add</label>
+                                <input id="refillQty" type="number" name="QuantityAdded" value="100" min="1" max="1000000" class="form-control" required />
+                            </div>
+                            <div class="col-md-3 col-lg-2">
+                                <button type="submit" class="btn btn-school w-100">Apply refill</button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-0">No products in catalogue.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">What you sell</h2>
+                    <p class="text-muted small mb-3">Sales owns the commercial side: <strong>catalogue</strong>, <strong>pricing</strong>, <strong>pack sizes</strong>, and helping schools choose what to buy.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-school btn-sm" disabled title="Coming soon">Manage catalogue</button>
+                        <button type="button" class="btn btn-outline-success btn-sm" disabled title="Coming soon">Update prices &amp; packs</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Coming soon">School visit notes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Pipeline</h2>
+                    <p class="text-muted small mb-0">Placeholder for opportunities: schools close to ordering, follow-ups, and revenue you are driving (not order approve/reject — that stays with Administrators).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning rounded-4 mb-0">
+        <a asp-controller="Company" asp-action="Login" class="alert-link">Sign in again</a> and choose Administrator or Sales on the staff sign-in page.
+    </div>
+}

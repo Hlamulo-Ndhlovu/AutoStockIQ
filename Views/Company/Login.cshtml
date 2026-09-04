@@ -1,0 +1,73 @@
+@model AutoStockIQ.Models.ViewModels.CompanyLoginViewModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Staff sign in";
+}
+
+<div class="auth-card rounded-4 border bg-white p-4 p-md-5 shadow-sm">
+    <p class="text-uppercase small fw-semibold text-muted mb-1">Kweena Ka Bobedi</p>
+    <h1 class="h4 mb-2">Staff sign in</h1>
+    <p class="text-muted small mb-4">Choose <strong>Administrator</strong> or <strong>Sales</strong>, then sign in with your <strong>@@autostockiq.co.za</strong> email and password.</p>
+
+    @if (TempData["CompanyError"] is string te && !string.IsNullOrEmpty(te))
+    {
+        <div class="alert alert-warning small py-2 mb-3" role="alert">@te</div>
+    }
+
+    <form asp-controller="Company" asp-action="Login" method="post">
+        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2" role="alert"></div>
+
+        <fieldset class="mb-4">
+            <legend class="form-label fw-medium mb-2">Sign in as</legend>
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <label class="role-pick rounded-3 border p-3 d-block h-100">
+                        <div class="d-flex align-items-start gap-2">
+                            <input class="form-check-input mt-1" type="radio" asp-for="Persona" value="@CompanyPortalSession.PersonaAdmin" id="personaAdmin" />
+                            <span>
+                                <span class="fw-semibold d-block">Administrator</span>
+                                <span class="small text-muted">Order approvals; stock alerts (read-only).</span>
+                            </span>
+                        </div>
+                    </label>
+                </div>
+                <div class="col-md-6">
+                    <label class="role-pick rounded-3 border p-3 d-block h-100">
+                        <div class="d-flex align-items-start gap-2">
+                            <input class="form-check-input mt-1" type="radio" asp-for="Persona" value="@CompanyPortalSession.PersonaSales" id="personaSales" />
+                            <span>
+                                <span class="fw-semibold d-block">Sales</span>
+                                <span class="small text-muted">Catalogue, selling, stock refills.</span>
+                            </span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <span asp-validation-for="Persona" class="text-danger small"></span>
+        </fieldset>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label fw-medium"></label>
+            <input asp-for="Email" class="form-control form-control-lg" autocomplete="username" placeholder="you@autostockiq.co.za" />
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label fw-medium"></label>
+            <input asp-for="Password" class="form-control form-control-lg" autocomplete="current-password" />
+            <span asp-validation-for="Password" class="text-danger small"></span>
+        </div>
+        <div class="mb-4 form-check">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label"></label>
+        </div>
+        <button type="submit" class="btn btn-company btn-lg w-100">Sign in</button>
+    </form>
+    <p class="mt-4 mb-0 small text-center text-muted">
+        <a asp-controller="Home" asp-action="Index" class="text-decoration-none">← Back to AutoStockIQ home</a>
+    </p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

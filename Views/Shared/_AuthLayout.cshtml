@@ -1,0 +1,57 @@
+@{
+    var theme = ViewData["AuthTheme"] as string ?? "school";
+    var title = ViewData["Title"] as string ?? "Sign in";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title · AutoStockIQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <partial name="_BrandTheme" />
+</head>
+<body class="auth-body auth-body--@theme">
+    <div class="auth-shell min-vh-100 d-flex flex-column flex-lg-row">
+        <aside class="auth-aside auth-aside--@theme d-flex flex-column justify-content-between p-4 p-lg-5">
+            <div>
+                <a asp-controller="Home" asp-action="Index" class="auth-brand text-decoration-none">AutoStockIQ</a>
+                @if (theme == "company")
+                {
+                    <h1 class="auth-aside-title mt-5 mb-3">Kweena Ka Bobedi</h1>
+                    <p class="auth-aside-lead mb-0">Pick <strong>Administrator</strong> or <strong>Sales</strong>, then sign in with your <strong>@@autostockiq.co.za</strong> account. Administrators see low-stock alerts only; Sales records refills.</p>
+                }
+                else
+                {
+                    <h1 class="auth-aside-title mt-5 mb-3">School portal</h1>
+                    <p class="auth-aside-lead mb-0">Register your school or sign in to browse the catalogue, place orders, and track deliveries from Kweena Ka Bobedi.</p>
+                }
+            </div>
+            <p class="auth-aside-foot small mb-0 opacity-75">
+                @if (theme == "company")
+                {
+                    <span>School customer?</span>
+                    <a asp-controller="Home" asp-action="SchoolPortal" class="auth-aside-link">Open the school portal →</a>
+                }
+                else
+                {
+                    <span>Kweena Ka Bobedi staff?</span>
+                    <a asp-controller="Home" asp-action="StaffPortal" class="auth-aside-link">Open the staff portal →</a>
+                }
+            </p>
+        </aside>
+        <main class="auth-main flex-grow-1 d-flex align-items-center justify-content-center p-4 p-lg-5">
+            <div class="auth-form-wrap w-100" style="max-width: @(theme == "company" ? "640px" : "420px");">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
