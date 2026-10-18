@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Business Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-1">Welcome, @ViewBag.BusinessName</h1>
+            <p class="text-muted mb-0">@ViewBag.Email</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted small mb-1">Submitted Orders</h6>
+                    <h3 class="mb-0">@ViewBag.SubmittedOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted small mb-1">Approved Orders</h6>
+                    <h3 class="mb-0">@ViewBag.ApprovedOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted small mb-1">Fulfilled Orders</h6>
+                    <h3 class="mb-0">@ViewBag.FulfilledOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted small mb-1">Cancelled Orders</h6>
+                    <h3 class="mb-0">@ViewBag.CancelledOrders</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a asp-action="Catalog" class="btn btn-primary">Browse Catalog</a>
+                        <a asp-action="Orders" class="btn btn-outline-primary">View Order History</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Account</h5>
+                    <form asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger w-100">Sign Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

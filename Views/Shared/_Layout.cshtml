@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AutoStockIQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <partial name="_BrandTheme" />
+    <link rel="stylesheet" href="~/AutoStockIQ.styles.css" asp-append-version="true" />
+</head>
+@{
+    var bodyClass = ViewData["BodyClass"] as string;
+}
+<body class="@(string.IsNullOrEmpty(bodyClass) ? "site-body" : $"{bodyClass} site-body")">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-toggleable-sm navbar-app mb-4">
+            <div class="container-xl px-3 px-lg-4">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">AutoStockIQ</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 align-items-sm-center gap-sm-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill nav-pill--company" asp-controller="Home" asp-action="StaffPortal">Staff portal</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-pill nav-pill--school" asp-controller="Home" asp-action="SchoolPortal">School portal</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-xl px-3 px-lg-4 pb-5">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer-app text-muted mt-auto py-4">
+        <div class="container-xl px-3 px-lg-4 small d-flex flex-wrap justify-content-between gap-2">
+            <span>&copy; 2026 AutoStockIQ · Kweena Ka Bobedi</span>
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

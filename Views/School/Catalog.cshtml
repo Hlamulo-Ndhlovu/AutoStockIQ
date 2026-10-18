@@ -1,0 +1,89 @@
+@model IList<AutoStockIQ.Data.Product>
+@{
+    ViewData["Title"] = "Catalogue";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">School portal</p>
+        <h1 class="h3 mb-1 landing-font-serif">Order stationery &amp; furniture</h1>
+        <p class="text-muted mb-0 small">
+            Place an order to reserve stock — including desks, chairs, boards, lockers, and classroom essentials. When stock hits the supplier&rsquo;s reorder level, <strong>Kweena Ka Bobedi</strong> staff are alerted to refill.
+        </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-controller="School" asp-action="Dashboard">Dashboard</a>
+        <a class="btn btn-outline-secondary" asp-controller="School" asp-action="Orders">My orders</a>
+        <form asp-controller="School" asp-action="Logout" method="post" class="m-0">
+            <button type="submit" class="btn btn-outline-secondary">Sign out</button>
+        </form>
+    </div>
+</div>
+
+@if (TempData["OrderSuccess"] is string ok && !string.IsNullOrEmpty(ok))
+{
+    <div class="alert alert-success rounded-4" role="alert">@ok</div>
+}
+@if (TempData["OrderError"] is string err && !string.IsNullOrEmpty(err))
+{
+    <div class="alert alert-danger rounded-4" role="alert">@err</div>
+}
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 table-premium">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">SKU</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Type</th>
+                        <th scope="col" class="text-end">Price (incl. placeholder)</th>
+                        <th scope="col" class="text-end">In stock</th>
+                        <th scope="col" class="text-end">Reorder level</th>
+                        <th scope="col" class="text-end" style="min-width: 12rem;">Order qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        var isFurniture = p.Sku.StartsWith("FURN-", StringComparison.OrdinalIgnoreCase);
+                        <tr class="@(p.StockQuantity <= p.ReorderLevel ? "table-warning" : null)">
+                            <td class="font-monospace small">@p.Sku</td>
+                            <td><strong>@p.Name</strong></td>
+                            <td>
+                                @if (isFurniture)
+                                {
+                                    <span class="badge bg-primary-subtle text-primary">Furniture</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success-subtle text-success">Stationery</span>
+                                }
+                            </td>
+                            <td class="text-end">R @p.UnitPrice.ToString("N2")</td>
+                            <td class="text-end fw-semibold">@p.StockQuantity</td>
+                            <td class="text-end text-muted small">@p.ReorderLevel</td>
+                            <td class="text-end">
+                                @if (p.StockQuantity < 1)
+                                {
+                                    <span class="badge bg-secondary">Out of stock</span>
+                                }
+                                else
+                                {
+                                    <form asp-controller="School" asp-action="PlaceOrder" method="post" class="d-flex gap-2 justify-content-end flex-wrap">
+                                        <input type="hidden" name="ProductId" value="@p.Id" />
+                                        <input type="number" name="Quantity" value="1" min="1" max="@p.StockQuantity" class="form-control form-control-sm" style="width: 5rem;" />
+                                        <button type="submit" class="btn btn-success btn-sm">Order</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<p class="text-muted small mt-3 mb-0">Demo catalogue is seeded at startup, now covering stationery and classroom furniture. The A4 exercise book starts at 100 units with reorder level 99 — a single unit order triggers a low-stock alert. <strong>Administrators</strong> see it for awareness; <strong>Sales</strong> records the refill in the company portal.</p>

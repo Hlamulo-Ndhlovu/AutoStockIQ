@@ -1,0 +1,96 @@
+@using AutoStockIQ.Data
+@{
+    var alerts = ViewBag.StockRefillAlerts as IList<StockRefillAlert>;
+    var totalCount = ViewBag.RefillAlertCount as int? ?? 0;
+    var persona = ViewBag.PortalPersona as string;
+    var isAdmin = persona == CompanyPortalSession.PersonaAdmin;
+    var isSales = persona == CompanyPortalSession.PersonaSales;
+}
+@if (alerts is { Count: > 0 })
+{
+    <div class="card shadow-sm rounded-4 mb-4 border-start border-4 border-warning">
+        <div class="card-body p-4">
+            <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-3">
+                <div>
+                    <h2 class="h5 mb-1">
+                        <span class="text-warning" aria-hidden="true">&#9888;</span> Stock refill alerts
+                    </h2>
+                    @if (isAdmin)
+                    {
+                        <p class="text-muted small mb-0">
+                            <strong>View only.</strong> You are notified when school orders push stock to the reorder level or below.
+                            <strong>Sales</strong> records refills when stock arrives — administrators do not adjust inventory here.
+                            @if (totalCount > alerts.Count)
+                            {
+                                <span class="d-block mt-1">Showing latest @alerts.Count of @totalCount.</span>
+                            }
+                        </p>
+                    }
+                    else if (isSales)
+                    {
+                        <p class="text-muted small mb-0">
+                            When a school order triggers a low-stock condition, coordinate restocking and use <strong>Refill</strong> below (or the form under &ldquo;Record a stock refill&rdquo;) to add units received.
+                            @if (totalCount > alerts.Count)
+                            {
+                                <span class="d-block mt-1">Showing latest @alerts.Count of @totalCount.</span>
+                            }
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-0">
+                            Alerts appear when on-hand stock is at or below the reorder level after a school order.
+                            @if (totalCount > alerts.Count)
+                            {
+                                <span>(Showing latest @alerts.Count of @totalCount.)</span>
+                            }
+                        </p>
+                    }
+                </div>
+                <span class="badge rounded-pill bg-warning text-dark align-self-center">@alerts.Count recent</span>
+            </div>
+            <div class="table-responsive mb-0">
+                <table class="table table-sm table-hover align-middle mb-0 table-premium">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">When (UTC)</th>
+                            <th scope="col">Product</th>
+                            <th scope="col" class="text-end">On hand after order</th>
+                            <th scope="col" class="text-end">Reorder level</th>
+                            <th scope="col">Note</th>
+                            @if (isSales)
+                            {
+                                <th scope="col" class="text-end" style="min-width: 11rem;">Refill (Sales)</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in alerts)
+                        {
+                            <tr>
+                                <td class="text-nowrap small">@a.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    <strong>@a.Product?.Name</strong>
+                                    <span class="text-muted small d-block">@a.Product?.Sku</span>
+                                </td>
+                                <td class="text-end fw-semibold @(a.QuantityAfter <= a.ReorderLevel ? "text-danger" : "")">@a.QuantityAfter</td>
+                                <td class="text-end text-muted">@a.ReorderLevel</td>
+                                <td class="small">@a.Message</td>
+                                @if (isSales)
+                                {
+                                    <td class="text-end">
+                                        <form asp-controller="Company" asp-action="RefillStock" method="post" class="d-flex gap-1 justify-content-end flex-wrap align-items-center">
+                                            <input type="hidden" name="ProductId" value="@a.ProductId" />
+                                            <input type="number" name="QuantityAdded" value="50" min="1" max="1000000" class="form-control form-control-sm" style="width: 4.5rem;" aria-label="Units to add" />
+                                            <button type="submit" class="btn btn-school btn-sm">Add</button>
+                                        </form>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
