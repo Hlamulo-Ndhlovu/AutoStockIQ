@@ -1,0 +1,87 @@
+@model IEnumerable<AutoStockIQ.Data.Product>
+@{
+    ViewData["Title"] = "Catalogue";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">Staff</p>
+        <h1 class="h3 mb-1 landing-font-serif">Catalogue</h1>
+        <p class="text-muted mb-0 small">Manage SKUs, pricing, stock, and reorder levels.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Add product</a>
+</div>
+
+@if (TempData["ProductSuccess"] is string success)
+{
+    <div class="alert alert-success rounded-4" role="alert">@success</div>
+}
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        @if (!Model.Any())
+        {
+            <p class="text-muted text-center py-4 mb-0">No products yet. <a asp-action="Create">Add the first product</a></p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-premium">
+                    <thead class="table-light">
+                        <tr>
+                            <th>SKU</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Stock</th>
+                            <th class="text-end">Reorder</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr class="@(product.IsActive && product.StockQuantity <= product.ReorderLevel ? "table-warning" : null)">
+                                <td class="font-monospace small">@product.Sku</td>
+                                <td>
+                                    <strong>@product.Name</strong>
+                                    @if (!string.IsNullOrEmpty(product.Location))
+                                    {
+                                        <div class="text-muted small">@product.Location</div>
+                                    }
+                                </td>
+                                <td>@product.Category</td>
+                                <td class="text-end">R @product.UnitPrice.ToString("N2")</td>
+                                <td class="text-end fw-semibold">@product.StockQuantity</td>
+                                <td class="text-end text-muted">@product.ReorderLevel</td>
+                                <td>
+                                    <span class="badge @(product.IsActive ? "bg-success" : "bg-secondary")">
+                                        @(product.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    @if (product.IsActive)
+                                    {
+                                        <form asp-action="Deactivate" asp-route-id="@product.Id" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Deactivate</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Activate" asp-route-id="@product.Id" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-success">Activate</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

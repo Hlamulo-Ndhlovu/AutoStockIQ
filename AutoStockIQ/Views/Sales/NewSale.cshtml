@@ -1,0 +1,106 @@
+@model IList<AutoStockIQ.Data.Product>
+@{
+    ViewData["Title"] = "New sale";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">Staff</p>
+        <h1 class="h3 mb-1 landing-font-serif">New sale</h1>
+        <p class="text-muted mb-0 small">Stock is deducted immediately when you save the sale.</p>
+    </div>
+    <a asp-action="Dashboard" class="btn btn-outline-secondary">Back</a>
+</div>
+
+@if (TempData["SaleError"] is string err)
+{
+    <div class="alert alert-danger rounded-4" role="alert">@err</div>
+}
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4">
+        @if (Model.Count == 0)
+        {
+            <p class="text-muted mb-0">No active products with stock. <a asp-controller="Product" asp-action="Index">Open the catalogue</a>.</p>
+        }
+        else
+        {
+            <form asp-action="CreateSale" method="post" id="sale-form">
+                @Html.AntiForgeryToken()
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-medium" for="CustomerName">Customer name</label>
+                        <input id="CustomerName" name="CustomerName" class="form-control" required maxlength="200" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-medium" for="CustomerType">Customer type</label>
+                        <select id="CustomerType" name="CustomerType" class="form-select" required>
+                            <option value="School">School</option>
+                            <option value="Business">Business</option>
+                            <option value="Walk-in">Walk-in</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2 class="h6">Line items</h2>
+                <div id="sale-lines" class="d-flex flex-column gap-2 mb-3"></div>
+                <button type="button" class="btn btn-outline-secondary btn-sm mb-4" id="add-line">Add line</button>
+
+                <div>
+                    <button type="submit" class="btn btn-primary">Complete sale</button>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@if (Model.Count > 0)
+{
+    <script type="application/json" id="product-data">
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(p => new { p.Id, p.Sku, p.Name, p.UnitPrice, p.StockQuantity })))
+    </script>
+}
+
+@section Scripts {
+    @if (Model.Count > 0)
+    {
+        <script>
+            (function () {
+                const products = JSON.parse(document.getElementById('product-data').textContent);
+                const lines = document.getElementById('sale-lines');
+                let index = 0;
+
+                function addLine() {
+                    const i = index++;
+                    const row = document.createElement('div');
+                    row.className = 'row g-2 align-items-end sale-line';
+                    const options = products.map(p =>
+                        `<option value="${p.Id}" data-stock="${p.StockQuantity}">${p.Name} (${p.Sku}) — R ${Number(p.UnitPrice).toFixed(2)} · ${p.StockQuantity} in stock</option>`
+                    ).join('');
+                    row.innerHTML = `
+                        <div class="col-md-7">
+                            <label class="form-label small">Product</label>
+                            <select name="Items[${i}].ProductId" class="form-select" required>${options}</select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Quantity</label>
+                            <input name="Items[${i}].Quantity" type="number" min="1" value="1" class="form-control" required />
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger w-100 remove-line">Remove</button>
+                        </div>`;
+                    lines.appendChild(row);
+                }
+
+                document.getElementById('add-line').addEventListener('click', addLine);
+                lines.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('remove-line')) {
+                        const row = e.target.closest('.sale-line');
+                        if (lines.children.length > 1) row.remove();
+                    }
+                });
+                addLine();
+            })();
+        </script>
+    }
+}

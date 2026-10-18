@@ -1,0 +1,27 @@
+## Visual Studio / .NET
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+.vs/
+
+## Database
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+## Secrets
+.env
+.env.local
+**/service-account-key.json
+
+## OS
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,84 @@
+@model IEnumerable<AutoStockIQ.Data.Supplier>
+@{
+    ViewData["Title"] = "Suppliers";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-1">Suppliers</h1>
+            <p class="text-muted mb-0">Manage supplier records</p>
+        </div>
+        <div class="col-auto">
+            <a asp-action="Create" class="btn btn-primary">Add Supplier</a>
+        </div>
+    </div>
+
+    @if (TempData["SupplierSuccess"] is string success)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @success
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <p class="text-muted text-center py-4">No suppliers found. <a asp-action="Create">Add your first supplier</a></p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact Person</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var supplier in Model)
+                            {
+                                <tr>
+                                    <td>@supplier.Name</td>
+                                    <td>@supplier.ContactPerson</td>
+                                    <td>@supplier.Email</td>
+                                    <td>@supplier.PhoneNumber</td>
+                                    <td>
+                                        <span class="badge @(supplier.IsActive ? "bg-success" : "bg-secondary")">
+                                            @(supplier.IsActive ? "Active" : "Inactive")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@supplier.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        @if (supplier.IsActive)
+                                        {
+                                            <form asp-action="Deactivate" asp-route-id="@supplier.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Deactivate</button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="Activate" asp-route-id="@supplier.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-success">Activate</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

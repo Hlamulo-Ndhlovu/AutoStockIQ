@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "AutoStockIQ";
+}
+
+<section class="landing-hero rounded-4 text-white p-4 p-lg-5 mb-5 position-relative overflow-hidden">
+    <div class="landing-hero-glow" aria-hidden="true"></div>
+    <div class="row align-items-center g-5 position-relative">
+        <div class="col-lg-7">
+            <p class="small text-uppercase fw-bold mb-2 opacity-95 tracking-wide">Stationery supply platform</p>
+            <h1 class="display-4 fw-bold mb-3 landing-font-serif">AutoStockIQ</h1>
+            <p class="lead mb-4 opacity-95 fw-medium" style="max-width: 38rem;">
+                Connect <strong>Kweena Ka Bobedi</strong> with South African schools — one platform for supplier operations and school ordering, with <strong>separate sign-in experiences</strong> for staff and schools.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a class="btn btn-light btn-lg px-4 btn-landing-primary" asp-action="StaffPortal">Staff portal</a>
+                <a class="btn btn-outline-light btn-lg px-4 btn-landing-outline" asp-action="SchoolPortal">School portal</a>
+            </div>
+            <p class="small mt-4 mb-0 opacity-85 fw-medium">Staff and schools never share the same sign-in page — pick the portal that matches your role.</p>
+        </div>
+        <div class="col-lg-5">
+            <div class="landing-panel rounded-4 p-4 border border-white border-opacity-25">
+                <h2 class="h5 mb-3 fw-bold landing-font-serif">Why split portals?</h2>
+                <ul class="list-unstyled mb-0 small opacity-95 fw-medium">
+                    <li class="d-flex gap-2 mb-3"><span class="text-warning flex-shrink-0" aria-hidden="true">&#10003;</span> Staff use corporate <strong>@@autostockiq.co.za</strong> accounts only.</li>
+                    <li class="d-flex gap-2 mb-3"><span class="text-warning flex-shrink-0" aria-hidden="true">&#10003;</span> Schools register and manage their own logins.</li>
+                    <li class="d-flex gap-2"><span class="text-warning flex-shrink-0" aria-hidden="true">&#10003;</span> Clearer security and fewer mistaken sign-in attempts.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_MobileWebChoice" />
+
+<section class="mb-5 pb-2">
+    <h2 class="landing-section-title">Capabilities</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 landing-card">
+                <div class="card-body p-4">
+                    <div class="cap-icon">01</div>
+                    <span class="badge rounded-pill bg-primary-subtle text-primary mb-2">Supplier</span>
+                    <h3 class="h5 fw-bold mb-2">Operations hub</h3>
+                    <p class="text-muted small mb-0 fw-medium">Inventory, school relationships, and order fulfilment in one staff workspace.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 landing-card">
+                <div class="card-body p-4">
+                    <div class="cap-icon">02</div>
+                    <span class="badge rounded-pill bg-success-subtle text-success mb-2">Schools</span>
+                    <h3 class="h5 fw-bold mb-2">Self-service ordering</h3>
+                    <p class="text-muted small mb-0 fw-medium">Schools register once, then sign in to order and track stationery deliveries.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 landing-card">
+                <div class="card-body p-4">
+                    <div class="cap-icon">03</div>
+                    <span class="badge rounded-pill bg-secondary-subtle text-secondary mb-2">Trust</span>
+                    <h3 class="h5 fw-bold mb-2">Role-based access</h3>
+                    <p class="text-muted small mb-0 fw-medium">Identity is separated by role so each journey stays focused and auditable.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

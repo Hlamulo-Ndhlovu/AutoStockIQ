@@ -1,0 +1,75 @@
+@model IList<UserManagementViewModel>
+@{
+    ViewData["Title"] = "Users";
+    ViewData["BodyClass"] = "app-shell app-shell--company";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">Administrator</p>
+        <h1 class="h3 mb-1 landing-font-serif">User management</h1>
+        <p class="text-muted mb-0 small">Create staff and client accounts, assign roles, and deactivate access.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Add user</a>
+</div>
+
+@if (TempData["NewPassword"] is string pwd)
+{
+    <div class="alert alert-warning rounded-4" role="alert">@pwd</div>
+}
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        @if (Model.Count == 0)
+        {
+            <p class="text-muted text-center py-4 mb-0">No users found.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-premium">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Email</th>
+                            <th>Organisation</th>
+                            <th>Roles</th>
+                            <th>Status</th>
+                            <th>POPIA</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Email</td>
+                            <td class="small">@(user.SchoolName ?? "—")</td>
+                            <td class="small">@string.Join(", ", user.Roles)</td>
+                            <td>
+                                <span class="badge @(user.IsActive ? "bg-success" : "bg-secondary")">
+                                    @(user.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>@(user.PopiaConsent ? "Yes" : "No")</td>
+                            <td class="text-end text-nowrap">
+                                <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form asp-action="ResetPassword" asp-route-id="@user.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" onclick="return confirm('Reset this user\'s password?');">Reset password</button>
+                                </form>
+                                @if (user.IsActive)
+                                {
+                                    <form asp-action="Deactivate" asp-route-id="@user.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Deactivate</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

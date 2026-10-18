@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Business Portal";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-3">Kweena Ka Bobedi</h1>
+                <p class="lead text-muted">Business Portal</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title mb-3">New Business?</h5>
+                            <p class="card-text text-muted mb-4">Create an account to start ordering from Kweena Ka Bobedi.</p>
+                            <a asp-controller="Business" asp-action="Register" class="btn btn-primary btn-lg w-100">Register Your Business</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title mb-3">Already Registered?</h5>
+                            <p class="card-text text-muted mb-4">Sign in to place orders and view your order history.</p>
+                            <a asp-controller="Business" asp-action="Login" class="btn btn-outline-primary btn-lg w-100">Sign In</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted">← Back to AutoStockIQ Home</a>
+            </div>
+        </div>
+    </div>
+</div>

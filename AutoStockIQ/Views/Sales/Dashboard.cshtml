@@ -1,0 +1,85 @@
+@{
+    ViewData["Title"] = "Sales";
+    var totalSales = Convert.ToInt32(ViewBag.TotalSales ?? 0);
+    var totalValue = Convert.ToDecimal(ViewBag.TotalValue ?? 0);
+    var recentSales = ViewBag.RecentSales as IList<AutoStockIQ.Data.Sale> ?? new List<AutoStockIQ.Data.Sale>();
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">Staff</p>
+        <h1 class="h3 mb-1 landing-font-serif">Walk-in sales</h1>
+        <p class="text-muted mb-0 small">Record counter sales, deduct stock, and print receipts.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="NewSale" class="btn btn-primary">New sale</a>
+        <a asp-action="History" class="btn btn-outline-secondary">History</a>
+        <a asp-controller="Company" asp-action="Dashboard" class="btn btn-outline-secondary">Staff dashboard</a>
+    </div>
+</div>
+
+@if (TempData["SaleSuccess"] is string ok)
+{
+    <div class="alert alert-success rounded-4" role="alert">@ok</div>
+}
+@if (TempData["SaleError"] is string err)
+{
+    <div class="alert alert-danger rounded-4" role="alert">@err</div>
+}
+
+<div class="row g-3 g-xl-4 mb-4">
+    <div class="col-sm-6">
+        <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+            <p class="stat-label mb-1">Sales recorded</p>
+            <p class="stat-value mb-0">@totalSales</p>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="stat-card stat-card--company rounded-4 p-4 h-100">
+            <p class="stat-label mb-1">Revenue</p>
+            <p class="stat-value mb-0">R @totalValue.ToString("N2")</p>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4">
+        <h2 class="h5 mb-3">Recent sales</h2>
+        @if (recentSales.Count == 0)
+        {
+            <p class="text-muted small mb-0">No sales yet. <a asp-action="NewSale">Record the first sale</a>.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-premium">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sale</th>
+                            <th>Customer</th>
+                            <th>Type</th>
+                            <th class="text-end">Total</th>
+                            <th>When (UTC)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var sale in recentSales)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@sale.SaleNumber</td>
+                            <td>@sale.CustomerName</td>
+                            <td>@sale.CustomerType</td>
+                            <td class="text-end">R @sale.TotalValue.ToString("N2")</td>
+                            <td class="small text-nowrap">@sale.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td class="text-end">
+                                <a asp-action="Receipt" asp-route-id="@sale.Id" class="btn btn-sm btn-outline-primary">Receipt</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

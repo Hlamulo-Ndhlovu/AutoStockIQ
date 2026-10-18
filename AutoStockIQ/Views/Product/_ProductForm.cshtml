@@ -1,0 +1,64 @@
+@model AutoStockIQ.Models.ViewModels.ProductViewModel
+@{
+    var suppliers = ViewBag.Suppliers as IList<AutoStockIQ.Data.Supplier> ?? new List<AutoStockIQ.Data.Supplier>();
+}
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <label asp-for="Sku" class="form-label fw-medium"></label>
+        <input asp-for="Sku" class="form-control" />
+        <span asp-validation-for="Sku" class="text-danger small"></span>
+    </div>
+    <div class="col-md-8">
+        <label asp-for="Name" class="form-label fw-medium"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Category" class="form-label fw-medium"></label>
+        <input asp-for="Category" class="form-control" list="categoryOptions" />
+        <datalist id="categoryOptions">
+            <option value="Stationery"></option>
+            <option value="Furniture"></option>
+            <option value="Cleaning"></option>
+            <option value="IT"></option>
+        </datalist>
+        <span asp-validation-for="Category" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="UnitPrice" class="form-label fw-medium"></label>
+        <input asp-for="UnitPrice" class="form-control" type="number" step="0.01" min="0" />
+        <span asp-validation-for="UnitPrice" class="text-danger small"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="StockQuantity" class="form-label fw-medium"></label>
+        <input asp-for="StockQuantity" class="form-control" type="number" min="0" />
+        <span asp-validation-for="StockQuantity" class="text-danger small"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="ReorderLevel" class="form-label fw-medium"></label>
+        <input asp-for="ReorderLevel" class="form-control" type="number" min="0" />
+        <span asp-validation-for="ReorderLevel" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="SupplierId" class="form-label fw-medium"></label>
+        <select asp-for="SupplierId" class="form-select">
+            <option value="">No supplier</option>
+            @foreach (var supplier in suppliers)
+            {
+                <option value="@supplier.Id">@supplier.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Location" class="form-label fw-medium"></label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location" class="text-danger small"></span>
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            <input asp-for="IsActive" class="form-check-input" />
+            <label asp-for="IsActive" class="form-check-label"></label>
+        </div>
+    </div>
+</div>

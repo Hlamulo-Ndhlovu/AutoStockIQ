@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "School portal";
+}
+
+<div class="portal-hero portal-hero--school rounded-4 p-4 p-md-5 mb-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <p class="portal-kicker text-uppercase small fw-semibold mb-2">For schools</p>
+            <h1 class="portal-title mb-3">Order stationery &amp; furniture</h1>
+            <p class="portal-lead mb-0 opacity-95">
+                Create a school account to browse the catalogue, place orders for desks, chairs, boards, lockers, and stationery with Kweena Ka Bobedi, and follow deliveries.
+                Registration and sign-in for schools are handled here only — separate from staff access.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end d-flex flex-column gap-2 align-items-lg-end">
+            <a class="btn btn-light btn-lg px-4 shadow-sm w-100 w-lg-auto" asp-controller="School" asp-action="Register">Register your school</a>
+            <a class="btn btn-outline-light btn-lg px-4 w-100 w-lg-auto" asp-controller="School" asp-action="Login">Sign in</a>
+            <p class="small mt-2 mb-0 opacity-75">Staff member? Use the <a asp-action="StaffPortal" class="text-white fw-semibold text-decoration-underline">staff portal</a>.</p>
+        </div>
+    </div>
+</div>
+
+@{
+    ViewData["MobileWebChoiceVariant"] = "compact";
+}
+<partial name="_MobileWebChoice" />
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="feature-tile h-100 p-4 rounded-3 border bg-white">
+            <h2 class="h6 text-uppercase text-muted mb-2">Catalogue</h2>
+            <p class="mb-0 text-muted small">Browse pens, books, art supplies, and classroom essentials.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-tile h-100 p-4 rounded-3 border bg-white">
+            <h2 class="h6 text-uppercase text-muted mb-2">Orders</h2>
+            <p class="mb-0 text-muted small">Submit requisitions and track status in one place.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-tile h-100 p-4 rounded-3 border bg-white">
+            <h2 class="h6 text-uppercase text-muted mb-2">Deliveries</h2>
+            <p class="mb-0 text-muted small">See dispatch and delivery milestones for your school.</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+@model IList<AutoStockIQ.Data.SchoolOrder>
+@{
+    ViewData["Title"] = "My orders";
+}
+
+<div class="dashboard-header d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+        <p class="text-uppercase small fw-semibold text-muted mb-1">School portal</p>
+        <h1 class="h3 mb-1 landing-font-serif">My orders</h1>
+        <p class="text-muted mb-0 small">Every order you place on the web or in the mobile app appears here. Stock updates are shared across both.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" asp-controller="School" asp-action="Dashboard">Dashboard</a>
+        <a class="btn btn-success" asp-controller="School" asp-action="Catalog">Catalogue</a>
+        <form asp-controller="School" asp-action="Logout" method="post" class="m-0">
+            <button type="submit" class="btn btn-outline-secondary">Sign out</button>
+        </form>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <p class="text-muted mb-0">You have no orders yet. <a asp-controller="School" asp-action="Catalog">Browse the catalogue</a> to place one.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="vstack gap-3">
+        @foreach (var o in Model)
+        {
+            var statusClass = o.Status switch
+            {
+                AutoStockIQ.Data.SchoolOrderStatus.Pending => "warning",
+                AutoStockIQ.Data.SchoolOrderStatus.Accepted => "success",
+                AutoStockIQ.Data.SchoolOrderStatus.Rejected => "danger",
+                _ => "secondary"
+            };
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-2">
+                        <div>
+                            <span class="fw-semibold">Order #@o.Id</span>
+                            <span class="text-muted small ms-2">@o.CreatedAtUtc.ToString("u")</span>
+                        </div>
+                        <span class="badge bg-@statusClass">@o.Status</span>
+                    </div>
+                    <ul class="mb-2 small">
+                        @foreach (var line in o.Lines)
+                        {
+                            var name = line.Product?.Name ?? $"Product #{line.ProductId}";
+                            <li>@line.Quantity × @name</li>
+                        }
+                    </ul>
+                    @if (o.Status != AutoStockIQ.Data.SchoolOrderStatus.Pending && o.DecidedAtUtc is { } decided)
+                    {
+                        <p class="small text-muted mb-0">
+                            Updated @decided.ToString("u")
+                            @if (!string.IsNullOrEmpty(o.DecisionNote))
+                            {
+                                <span>— @o.DecisionNote</span>
+                            }
+                        </p>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

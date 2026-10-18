@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Staff portal";
+}
+
+<div class="portal-hero portal-hero--company rounded-4 p-4 p-md-5 mb-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <p class="portal-kicker text-uppercase small fw-semibold mb-2 opacity-90">Kweena Ka Bobedi</p>
+            <h1 class="portal-title mb-3">Supplier operations</h1>
+            <p class="portal-lead mb-0 opacity-95">
+                On <strong>staff sign-in</strong>, choose <strong>Administrator</strong> or <strong>Sales</strong>, then enter your <strong>@@autostockiq.co.za</strong> email and password.
+                Administrators approve orders and see low-stock alerts only; Sales sells and records refills. No self-service registration.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            @if (ViewBag.ShowCompanyDashboard == true)
+            {
+                <a class="btn btn-light btn-lg px-4 shadow-sm me-2 mb-2 mb-lg-0" asp-controller="Company" asp-action="Dashboard">Open your dashboard</a>
+            }
+            <a class="btn btn-outline-light btn-lg px-4 mb-2 mb-lg-0" asp-controller="Company" asp-action="Login">@(ViewBag.ShowCompanyDashboard == true ? "Switch role / sign in again" : "Continue to staff sign-in")</a>
+            <p class="small mt-3 mb-0 opacity-75">School customer? Use the <a asp-action="SchoolPortal" class="text-white fw-semibold text-decoration-underline">school portal</a> instead.</p>
+        </div>
+    </div>
+</div>
+
+@{
+    ViewData["MobileWebChoiceVariant"] = "compact";
+}
+<partial name="_MobileWebChoice" />
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="feature-tile h-100 p-4 rounded-3 border bg-white">
+            <h2 class="h6 text-uppercase text-muted mb-2">Administrator</h2>
+            <p class="mb-0 text-muted small"><strong>Accept or reject</strong> orders. See refill <strong>alerts</strong> when stock is low — <strong>Sales</strong> adds stock.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-tile h-100 p-4 rounded-3 border bg-white">
+            <h2 class="h6 text-uppercase text-muted mb-2">Sales</h2>
+            <p class="mb-0 text-muted small">Own <strong>what is sold</strong> and <strong>record stock refills</strong> when deliveries arrive — catalogue, pricing, quotes, schools.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-tile h-100 p-4 rounded-3 border bg-white">
+            <h2 class="h6 text-uppercase text-muted mb-2">One supplier</h2>
+            <p class="mb-0 text-muted small">Kweena Ka Bobedi stationery — separate sign-in paths keep approvals and selling clear.</p>
+        </div>
+    </div>
+</div>

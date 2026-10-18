@@ -1,0 +1,110 @@
+@model AutoStockIQ.Models.ViewModels.AuditLogIndexViewModel
+@{
+    ViewData["Title"] = "Audit Log";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-1">Audit Log</h1>
+            <p class="text-muted mb-0">View and filter system activity logs</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Filter Options</h5>
+            <form asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label asp-for="Filter.UserId" class="form-label small fw-medium">User</label>
+                    <select asp-for="Filter.UserId" class="form-select">
+                        <option value="">All Users</option>
+                        @if (ViewBag.Users != null)
+                        {
+                            @foreach (var user in (IEnumerable<dynamic>)ViewBag.Users)
+                            {
+                                <option value="@user.Id">@user.Email</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Filter.ActionType" class="form-label small fw-medium">Action Type</label>
+                    <select asp-for="Filter.ActionType" class="form-select">
+                        <option value="">All Actions</option>
+                        @if (ViewBag.ActionTypes != null)
+                        {
+                            @foreach (var action in (IEnumerable<string>)ViewBag.ActionTypes)
+                            {
+                                <option value="@action">@action</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Filter.EntityType" class="form-label small fw-medium">Entity Type</label>
+                    <select asp-for="Filter.EntityType" class="form-select">
+                        <option value="">All Entities</option>
+                        @if (ViewBag.EntityTypes != null)
+                        {
+                            @foreach (var entity in (IEnumerable<string>)ViewBag.EntityTypes)
+                            {
+                                <option value="@entity">@entity</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label asp-for="Filter.StartDate" class="form-label small fw-medium">Start Date</label>
+                    <input asp-for="Filter.StartDate" type="date" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label asp-for="Filter.EndDate" class="form-label small fw-medium">End Date</label>
+                    <input asp-for="Filter.EndDate" type="date" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            @if (!Model.AuditLogs.Any())
+            {
+                <p class="text-muted text-center py-4">No audit log entries found matching your criteria.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Entity</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.AuditLogs)
+                            {
+                                <tr>
+                                    <td>@log.TimestampUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td>@log.UserName</td>
+                                    <td>@log.ActionType</td>
+                                    <td>@log.EntityType (@log.EntityId)</td>
+                                    <td>@log.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
