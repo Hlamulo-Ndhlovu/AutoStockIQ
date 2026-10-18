@@ -119,11 +119,19 @@ public class OrderPlacementService
 
         product.StockQuantity -= quantity;
 
+        // Generate order number
+        var orderCount = await _db.SchoolOrders.CountAsync(cancellationToken) + 1;
+        var orderNumber = $"ORD-{orderCount:D4}";
+
+        var lineTotal = quantity * product.UnitPrice;
+
         var order = new SchoolOrder
         {
+            OrderNumber = orderNumber,
             SchoolUserId = schoolUserId,
             CreatedAtUtc = DateTime.UtcNow,
             Status = SchoolOrderStatus.Pending,
+            TotalValue = lineTotal,
         };
         _db.SchoolOrders.Add(order);
         await _db.SaveChangesAsync(cancellationToken);
