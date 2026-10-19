@@ -4,8 +4,6 @@ services:
     name: autostockiq
     runtime: docker
     plan: free
-    dockerContext: ./AutoStockIQ
-    dockerfilePath: ./AutoStockIQ/Dockerfile
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
