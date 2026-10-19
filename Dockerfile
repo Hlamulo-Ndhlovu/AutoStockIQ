@@ -3,12 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy the project file and restore dependencies
-COPY ["AutoStockIQ.csproj", "./"]
-RUN dotnet restore "AutoStockIQ.csproj"
+COPY ["AutoStockIQ/AutoStockIQ.csproj", "./"]
+RUN dotnet restore "AutoStockIQ/AutoStockIQ.csproj"
 
 # Copy the rest of the application code
-COPY . .
-WORKDIR "/src"
+COPY AutoStockIQ/. ./AutoStockIQ/
+WORKDIR "/src/AutoStockIQ"
 
 # Build the application
 RUN dotnet build "AutoStockIQ.csproj" -c Release -o /app/build
