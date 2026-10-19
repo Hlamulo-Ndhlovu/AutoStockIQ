@@ -67,7 +67,30 @@ public static class DbInitializer
     {
         var existing = await userManager.FindByEmailAsync(email);
         if (existing is not null)
+        {
+            // Update password if user exists
+            var token = await userManager.GeneratePasswordResetTokenAsync(existing);
+            var resetResult = await userManager.ResetPasswordAsync(existing, token, password);
+            if (resetResult.Succeeded)
+            {
+                // Ensure role is correct
+                if (isSales)
+                {
+                    if (!await userManager.IsInRoleAsync(existing, AuthConstants.StaffRole))
+                    {
+                        await userManager.AddToRoleAsync(existing, AuthConstants.StaffRole);
+                    }
+                }
+                else
+                {
+                    if (!await userManager.IsInRoleAsync(existing, AuthConstants.AdminRole))
+                    {
+                        await userManager.AddToRoleAsync(existing, AuthConstants.AdminRole);
+                    }
+                }
+            }
             return;
+        }
 
         var user = new ApplicationUser
         {
