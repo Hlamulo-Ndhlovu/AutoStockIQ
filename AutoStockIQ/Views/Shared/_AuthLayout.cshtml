@@ -31,18 +31,21 @@
                     <p class="auth-aside-lead mb-0">Register your school or sign in to browse the catalogue, place orders, and track deliveries from Kweena Ka Bobedi.</p>
                 }
             </div>
-            <p class="auth-aside-foot small mb-0 opacity-75">
-                @if (theme == "company")
-                {
-                    <span>School customer?</span>
-                    <a asp-controller="Home" asp-action="SchoolPortal" class="auth-aside-link">Open the school portal →</a>
-                }
-                else
-                {
-                    <span>Kweena Ka Bobedi staff?</span>
-                    <a asp-controller="Home" asp-action="StaffPortal" class="auth-aside-link">Open the staff portal →</a>
-                }
-            </p>
+            @if (User.Identity?.IsAuthenticated != true)
+            {
+                <p class="auth-aside-foot small mb-0 opacity-75">
+                    @if (theme == "company")
+                    {
+                        <span>School customer?</span>
+                        <a asp-controller="Home" asp-action="SchoolPortal" class="auth-aside-link">Open the school portal →</a>
+                    }
+                    else
+                    {
+                        <span>Kweena Ka Bobedi staff?</span>
+                        <a asp-controller="Home" asp-action="StaffPortal" class="auth-aside-link">Open the staff portal →</a>
+                    }
+                </p>
+            }
         </aside>
         <main class="auth-main flex-grow-1 d-flex align-items-center justify-content-center p-4 p-lg-5">
             <div class="auth-form-wrap w-100" style="max-width: @(theme == "company" ? "640px" : "420px");">

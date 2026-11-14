@@ -14,6 +14,9 @@
 </head>
 @{
     var bodyClass = ViewData["BodyClass"] as string;
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var isStaff = isAuthenticated && (User.IsInRole(AuthConstants.AdminRole) || User.IsInRole(AuthConstants.StaffRole));
+    var isSchool = isAuthenticated && User.IsInRole(AuthConstants.SchoolUserRole);
 }
 <body class="@(string.IsNullOrEmpty(bodyClass) ? "site-body" : $"{bodyClass} site-body")">
     <header>
@@ -29,13 +32,16 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill nav-pill--company" asp-controller="Home" asp-action="StaffPortal">Staff portal</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-pill nav-pill--school" asp-controller="Home" asp-action="SchoolPortal">School portal</a>
-                        </li>
-                        @if (User.IsInRole(AuthConstants.AdminRole) || User.IsInRole(AuthConstants.StaffRole))
+                        @if (!isAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-pill nav-pill--company" asp-controller="Home" asp-action="StaffPortal">Staff portal</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-pill nav-pill--school" asp-controller="Home" asp-action="SchoolPortal">School portal</a>
+                            </li>
+                        }
+                        else if (isStaff)
                         {
                             <li class="nav-item"><a class="nav-link" asp-controller="Company" asp-action="Dashboard">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Product" asp-action="Index">Catalogue</a></li>
@@ -48,15 +54,27 @@
                                 <li class="nav-item"><a class="nav-link" asp-controller="UserManagement" asp-action="Index">Users</a></li>
                             }
                         }
-                        else if (User.IsInRole(AuthConstants.SchoolUserRole))
+                        else if (isSchool)
                         {
                             <li class="nav-item"><a class="nav-link" asp-controller="School" asp-action="Dashboard">My dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="School" asp-action="Catalog">Order</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="School" asp-action="Orders">Orders</a></li>
                         }
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    @if (isAuthenticated)
+                    {
+                        <ul class="navbar-nav align-items-sm-center ms-md-2">
+                            <li class="nav-item">
+                                <form asp-controller="Home" asp-action="Logout" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Sign out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>

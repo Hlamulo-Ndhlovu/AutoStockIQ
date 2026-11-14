@@ -118,8 +118,16 @@ public class SchoolController : Controller
 
     [AllowAnonymous]
     [HttpGet("register")]
-    public IActionResult Register()
+    public async Task<IActionResult> Register()
     {
+        var redirect = await RedirectIfWrongPortalAsync();
+        if (redirect is not null)
+            return redirect;
+
+        if (User.Identity?.IsAuthenticated == true
+            && User.IsInRole(AuthConstants.SchoolUserRole))
+            return RedirectToAction(nameof(Dashboard));
+
         ViewData["AuthTheme"] = "school";
         return View();
     }
@@ -188,8 +196,16 @@ public class SchoolController : Controller
 
     [AllowAnonymous]
     [HttpGet("login")]
-    public IActionResult Login(string? returnUrl = null)
+    public async Task<IActionResult> Login(string? returnUrl = null)
     {
+        var redirect = await RedirectIfWrongPortalAsync();
+        if (redirect is not null)
+            return redirect;
+
+        if (User.Identity?.IsAuthenticated == true
+            && User.IsInRole(AuthConstants.SchoolUserRole))
+            return RedirectToAction(nameof(Dashboard));
+
         ViewData["ReturnUrl"] = returnUrl;
         ViewData["AuthTheme"] = "school";
         return View();
@@ -232,6 +248,26 @@ public class SchoolController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction(nameof(HomeController.SchoolPortal), "Home");
+        return RedirectToAction(nameof(HomeController.Index), "Home");
+    }
+
+    /// <summary>Keep signed-in staff out of school register/login until they sign out.</summary>
+    private async Task<IActionResult?> RedirectIfWrongPortalAsync()
+    {
+        if (User.Identity?.IsAuthenticated != true)
+            return null;
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+            return null;
+
+        var isStaff = await _userManager.IsInRoleAsync(user, AuthConstants.AdminRole)
+            || await _userManager.IsInRoleAsync(user, AuthConstants.StaffRole);
+        var isSchool = await _userManager.IsInRoleAsync(user, AuthConstants.SchoolUserRole);
+
+        if (isStaff && !isSchool)
+            return RedirectToAction("Dashboard", "Company");
+
+        return null;
     }
 }

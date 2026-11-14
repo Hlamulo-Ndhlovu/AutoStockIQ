@@ -255,8 +255,18 @@ public class CompanyController : Controller
         if (User.Identity?.IsAuthenticated == true)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (await PortalSessionMatchesUserAsync(user))
-                return RedirectToAction(nameof(Dashboard));
+            if (user is not null)
+            {
+                var isStaff = await _userManager.IsInRoleAsync(user, AuthConstants.AdminRole)
+                    || await _userManager.IsInRoleAsync(user, AuthConstants.StaffRole);
+                var isSchool = await _userManager.IsInRoleAsync(user, AuthConstants.SchoolUserRole);
+
+                if (isSchool && !isStaff)
+                    return RedirectToAction("Dashboard", "School");
+
+                if (await PortalSessionMatchesUserAsync(user))
+                    return RedirectToAction(nameof(Dashboard));
+            }
         }
 
         ViewData["ReturnUrl"] = returnUrl;

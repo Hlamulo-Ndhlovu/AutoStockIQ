@@ -12,10 +12,28 @@
                 Connect <strong>Kweena Ka Bobedi</strong> with South African schools — one platform for supplier operations and school ordering, with <strong>separate sign-in experiences</strong> for staff and schools.
             </p>
             <div class="d-flex flex-wrap gap-3">
-                <a class="btn btn-light btn-lg px-4 btn-landing-primary" asp-action="StaffPortal">Staff portal</a>
-                <a class="btn btn-outline-light btn-lg px-4 btn-landing-outline" asp-action="SchoolPortal">School portal</a>
+                @if (ViewBag.IsGuest == true || ViewBag.IsGuest is null)
+                {
+                    <a class="btn btn-light btn-lg px-4 btn-landing-primary" asp-action="StaffPortal">Staff portal</a>
+                    <a class="btn btn-outline-light btn-lg px-4 btn-landing-outline" asp-action="SchoolPortal">School portal</a>
+                }
+                else if (ViewBag.IsStaffUser == true)
+                {
+                    <a class="btn btn-light btn-lg px-4 btn-landing-primary" asp-controller="Company" asp-action="Dashboard">Open staff dashboard</a>
+                }
+                else if (ViewBag.IsSchoolUser == true)
+                {
+                    <a class="btn btn-light btn-lg px-4 btn-landing-primary" asp-controller="School" asp-action="Dashboard">Open school dashboard</a>
+                }
             </div>
-            <p class="small mt-4 mb-0 opacity-85 fw-medium">Staff and schools never share the same sign-in page — pick the portal that matches your role.</p>
+            @if (ViewBag.IsGuest == true || ViewBag.IsGuest is null)
+            {
+                <p class="small mt-4 mb-0 opacity-85 fw-medium">Staff and schools never share the same sign-in page — pick the portal that matches your role.</p>
+            }
+            else
+            {
+                <p class="small mt-4 mb-0 opacity-85 fw-medium">Signed in to your portal. Sign out to choose a different role.</p>
+            }
         </div>
         <div class="col-lg-5">
             <div class="landing-panel rounded-4 p-4 border border-white border-opacity-25">

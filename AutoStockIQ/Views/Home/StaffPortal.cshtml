@@ -18,7 +18,10 @@
                 <a class="btn btn-light btn-lg px-4 shadow-sm me-2 mb-2 mb-lg-0" asp-controller="Company" asp-action="Dashboard">Open your dashboard</a>
             }
             <a class="btn btn-outline-light btn-lg px-4 mb-2 mb-lg-0" asp-controller="Company" asp-action="Login">@(ViewBag.ShowCompanyDashboard == true ? "Switch role / sign in again" : "Continue to staff sign-in")</a>
-            <p class="small mt-3 mb-0 opacity-75">School customer? Use the <a asp-action="SchoolPortal" class="text-white fw-semibold text-decoration-underline">school portal</a> instead.</p>
+            @if (User.Identity?.IsAuthenticated != true)
+            {
+                <p class="small mt-3 mb-0 opacity-75">School customer? Use the <a asp-action="SchoolPortal" class="text-white fw-semibold text-decoration-underline">school portal</a> instead.</p>
+            }
         </div>
     </div>
 </div>
