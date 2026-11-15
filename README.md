@@ -70,7 +70,8 @@ Every push and pull request triggers our automated GitHub Actions pipeline to co
 ### Database Verification ($\ge 10$ Records per Table)
 All relational database tables are seeded and verified to ensure full transactional integrity and encrypted credential storage.
 
-![Database Records Proof]"C:\Users\MBUSO\Documents\OneDrive - University of Johannesburg\Pictures\Screenshots\auto_dabase.png"
+![Database Records Proof]<img width="807" height="400" alt="auto_dabase" src="https://github.com/user-attachments/assets/74490598-8d04-4954-97ad-5de79be62570" />
+
 
 ### System & Negative Testing Summary
 | Test ID | Feature / Screen | Test Scenario | Expected Outcome | Status |
