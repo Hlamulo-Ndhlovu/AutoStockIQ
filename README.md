@@ -26,17 +26,16 @@
 
 ### 1. Portal Entry & Authentication (Landing, Login, Registration & SSO)
 *Role-separated portal entry ensuring staff and school accounts maintain dedicated sign-in experiences, backed by secure user registration, POPIA consent capture, encrypted password handling, and Single Sign-On.*
+Portal Entry( Staff Portal)
+<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/1c31996a-e1c3-4626-8857-fe43e3490eb5" />
 
-| Portal Entry (Staff Portal) | Login & SSO Screen | User Registration |
-| :---: | :---: | :---: | :---: |
-| ![Staff Portal Entry](<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/2eea382d-fe8d-45c8-a2ed-7f059d1bf4f5" />
-) | ![Login Screen](<img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/910b0bcc-59f3-473c-b9dc-da8a39565c45" />
-) | ![Register Screen](<img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/dd85fc10-e8ce-48e7-a272-086a8bfdfe58" />
-) 
+Login & User Registration
+<img width="402" height="544" alt="Screenshot 2026-10-19 063907" src="https://github.com/user-attachments/assets/9c351cc7-a9fd-4801-90df-552db5fa7331" />
 
----
+<img width="436" height="546" alt="Screenshot 2026-10-19 063248" src="https://github.com/user-attachments/assets/9bc5de1b-f326-458c-85b5-313aa848a4c3" />
 
----
+
+
 
 ### 2. School & Business Client Portal (Catalogue & Ordering)
 *Real-time stock visibility, line-item order placement, and automated order tracking (`ORD-XXXX`).*
