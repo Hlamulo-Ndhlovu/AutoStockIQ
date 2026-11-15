@@ -52,10 +52,12 @@
 
 
 #### Place Order Flow
-![Place Order Flow](assets/screenshots/place_order.png)
+<img width="376" height="495" alt="Orders" src="https://github.com/user-attachments/assets/8c66bef6-2603-427a-a2af-ffef75999719" />
+
 
 #### Order History & Status
-![Order History and Status](assets/screenshots/order_history.png)
+<img width="371" height="515" alt="Screenshot 2026-11-15 102400" src="https://github.com/user-attachments/assets/09346012-31ff-432a-ae9c-eac8dce08055" />
+
 
 ---
 
@@ -67,10 +69,10 @@
 
 
 #### Pending Order Approval
-![Pending Order Approval](assets/screenshots/order_approval.png)
+<img width="433" height="414" alt="image" src="https://github.com/user-attachments/assets/af7c88e2-6e6d-4e29-a186-aa7bd86fc68c" />
 
 #### Stock Refill & Alerts
-![Stock Refill and Alerts](assets/screenshots/stock_refill.png)
+<img width="455" height="507" alt="image" src="https://github.com/user-attachments/assets/db968156-4b28-4802-90c3-1abfff7fc1b8" />
 
 ---
 
