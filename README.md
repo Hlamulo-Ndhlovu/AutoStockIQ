@@ -92,5 +92,7 @@ All relational database tables are seeded and verified to ensure full transactio
 ### Local Development
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/your-username/AutoStockIQ.git](https://github.com/your-username/AutoStockIQ.git)
+ https://github.com/Hlamulo-Ndhlovu/AutoStockIQ.git
+
+ 
    cd AutoStockIQ
