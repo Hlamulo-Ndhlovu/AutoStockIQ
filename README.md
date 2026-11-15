@@ -22,9 +22,6 @@
 
 ---
 
-## 📱 System Screenshots & Walkthrough
-
-## 🖥️ System Screenshots & Walkthrough
 
 ### 1. Staff Portal Entry & Authentication (Role Selection & Sign-In)
 
@@ -32,7 +29,10 @@
 
 | Staff Portal Landing Page | Role Selection (Administrator / Sales) | Staff Sign-In Form |
 | :---: | :---: | :---: |
-| ![Staff Portal Landing](assets/screenshots/staff_landing_page.png) | ![Role Selection](assets/screenshots/staff_role_selection.png) | ![Staff Sign-In Form](assets/screenshots/staff_signin_form.png) |
+| ![Staff Portal Landing](assets/screenshots/<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/61b0bcb7-8a73-427b-9b18-9b3609363416" />
+) | ![Role Selection](assets/screenshots/<img width="234" height="303" alt="staff login" src="https://github.com/user-attachments/assets/47a9fc48-31fd-44ac-aecd-9d1751b5a7c5" />
+) | ![Staff Sign-In Form](assets/screenshots/<img width="234" height="303" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/03d9d0b2-118d-4035-872a-f155e9ee024d" />
+) |
 
 
 
