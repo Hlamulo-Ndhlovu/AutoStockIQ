@@ -1,4 +1,3 @@
-<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/acabc969-08da-4715-bba7-5a11de71eb26" />
 # AutoStockIQ — Kwena ka Bobedi Inventory Management & Stock Control Ecosystem
 
 ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
@@ -30,7 +29,7 @@
 
 | Portal Entry (Staff Portal) | Login & SSO Screen | User Registration | User Settings |
 | :---: | :---: | :---: | :---: |
-| ![Staff Portal Entry](<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/4cae559b-2f36-492d-87cc-646a5d5d6239" />
+| ![Staff Portal Entry] (<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/4cae559b-2f36-492d-87cc-646a5d5d6239" />
 ) | ![Login Screen](assets/screenshots/01_login.png) | ![Register Screen](assets/screenshots/02_register.png) | ![Settings Screen](assets/screenshots/03_settings.png) |
 
 ---
