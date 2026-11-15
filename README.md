@@ -29,8 +29,8 @@
 
 | Portal Entry (Staff Portal) | Login & SSO Screen | User Registration | User Settings |
 | :---: | :---: | :---: | :---: |
-| ![Staff Portal Entry] (<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/4cae559b-2f36-492d-87cc-646a5d5d6239" />
-) | ![Login Screen](assets/screenshots/01_login.png) | ![Register Screen](assets/screenshots/02_register.png) | ![Settings Screen](assets/screenshots/03_settings.png) |
+|<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/4cae559b-2f36-492d-87cc-646a5d5d6239" />
+| <img width="440" height="406" alt="Screenshot 2026-11-15 082834" src="https://github.com/user-attachments/assets/b856ae76-96ce-4d3e-bfa5-3d569bd9c7be" /> | <img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/063b43ed-50ce-4e8e-ad55-71b3338f9b32" /> | ![Settings Screen](assets/screenshots/03_settings.png) |
 
 ---
 
