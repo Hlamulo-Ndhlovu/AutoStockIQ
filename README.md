@@ -1,24 +1,24 @@
 # AutoStockIQ — Kwena ka Bobedi Inventory Management & Stock Control Ecosystem
 
 ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
-![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20ASP.NET%20Core%20MVC%20%7C%20Web-blue)
+![Hosting](https://img.shields.io/badge/Hosting-Render-blueviolet)
+![Platform](https://img.shields.io/badge/Platform-ASP.NET%20Core%20MVC%20%7C%20Web-blue)
 ![Team](https://img.shields.io/badge/Team-ProKreatives-orange)
 
 ## 📖 Project Overview
-**AutoStockIQ** is a unified, multi-platform inventory management and procurement ecosystem built for **Kwena ka Bobedi (Pty) Ltd**. It bridges the communication gap between educational institutions (schools) and stationery/LTSM suppliers by providing a **single source of truth** across three integrated surfaces:
+**AutoStockIQ** is a unified inventory management and procurement ecosystem built for **Kwena ka Bobedi (Pty) Ltd**. It bridges the communication gap between educational institutions (schools) and stationery/LTSM suppliers by providing a **single source of truth** across your web-based platform surfaces:
 
-1. **Android Mobile Application:** Built for school administrators, business clients, and sales staff to browse catalogues, place orders, and manage stock on the go.
-2. **Web Portal (ASP.NET Core MVC):** Full browser-based administrative and school procurement management.
-3. **Public Marketing Website:** Static HTML/CSS/JS informational portal for client onboarding, pricing tiers, POPIA compliance details, and quote requests.
+1. **Web Application (ASP.NET Core MVC):** Secure portals for school administrators, business clients, and company staff to browse catalogues, place orders, approve requests, and manage stock.
+2. **Public Marketing Website:** Static HTML/CSS/JS informational portal for client onboarding, pricing tiers, POPIA compliance details, and quote requests.
 
 ---
 
 ## 🏗️ System Architecture & Tech Stack
-* **Mobile Client:** Android (Kotlin/Java) consuming RESTful JSON endpoints via JWT authentication.
-* **Backend & Web Portal:** ASP.NET Core MVC & Web API (C#), Entity Framework Core.
+* **Backend & Web Portal:** ASP.NET Core MVC (C#), Entity Framework Core.
+* **Hosting & Deployment:** Hosted live on **Render**.
 * **Database:** Relational DBMS with normalized tables (`Users`, `Products`, `SchoolOrders`, `OrderLines`, `Suppliers`, `AuditLogs`) populated with $\ge 10$ records per table.
 * **Security:** Encrypted/hashed password storage, Role-Based Access Control (`Admin`, `School User`, `Business User`, `Staff`), Single Sign-On (SSO), and POPIA consent logging.
-* **DevOps & CI/CD:** Azure DevOps (Boards/Backlog tracking), GitHub Version Control, and GitHub Actions automated build/test pipelines.
+* **DevOps & CI/CD:** GitHub Version Control and GitHub Actions automated build/test pipelines.
 
 ---
 
@@ -79,7 +79,7 @@ All relational database tables are seeded and verified to ensure full transactio
 | **TC-02** | Security | Inspect `Users` table in DBMS | Passwords are securely hashed/encrypted | ✅ Pass |
 | **TC-03** | Order Placement | Submit negative or non-numeric stock quantity | Input blocked with validation alert | ✅ Pass |
 | **TC-04** | Stock Control | Admin approves school order | Order status updates; stock quantity deducts | ✅ Pass |
-| **TC-05** | Mobile Deployment | Run compiled APK on physical Android device | Connects to live API; all screens responsive | ✅ Pass |
+| **TC-05** | Web Deployment | Access live system hosted on Render | Connects successfully; all views responsive | ✅ Pass |
 
 ---
 
@@ -87,42 +87,10 @@ All relational database tables are seeded and verified to ensure full transactio
 
 ### Prerequisites
 * [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
-* [Android Studio](https://developer.android.com/studio) (for building/running the mobile APK)
 * SQL Server / PostgreSQL / LocalDB instance
 
-### Running the Backend API & MVC Portal
+### Local Development
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/AutoStockIQ.git
+   git clone [https://github.com/your-username/AutoStockIQ.git](https://github.com/your-username/AutoStockIQ.git)
    cd AutoStockIQ
-   ```
-2. Update the database connection string in `appsettings.json`.
-3. Apply Entity Framework migrations and seed data:
-   ```bash
-   dotnet ef database update
-   ```
-4. Run the application:
-   ```bash
-   dotnet run
-   ```
-
-### Running the Android Mobile Application
-1. Open the `AndroidApp` folder in **Android Studio**.
-2. Update `BASE_URL` in your API configuration file to point to your hosted API endpoint (or `http://10.0.2.2:<port>` for local emulator testing).
-3. Build and deploy directly to a physical Android device via USB debugging or generate a signed APK.
-
----
-
-## 📚 User Support & Documentation
-* **In-App Help:** Accessible via the **Help / Support** option inside the User Settings menu on both Android and Web.
-* **User Manual:** Full step-by-step guide located in [`docs/User_Manual.md`](docs/User_Manual.md).
-
----
-
-## 👥 Team ProKreatives
-| Name | Student Number | Role |
-| :--- | :--- | :--- |
-| **Hlamulo Ndhlovu** | ST10354799 | Lead Full-Stack Developer |
-| **Simphiwe Dladla** | ST10270158 | Web Developer / Frontend & Project Manager |
-| **Mbuso Sihlali** | ST10346881 | Quality Assurance (QA) & System Integrator |
-| **Mudodzwa Matshakatini** | ST10440341 | UI/UX Designer & Documentation |
