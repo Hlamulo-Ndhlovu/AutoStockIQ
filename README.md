@@ -27,12 +27,14 @@
 ### 1. Portal Entry & Authentication (Landing, Login, Registration & SSO)
 *Role-separated portal entry ensuring staff and school accounts maintain dedicated sign-in experiences, backed by secure user registration, POPIA consent capture, encrypted password handling, and Single Sign-On.*
 
-| Portal Entry (Staff Portal) | Login & SSO Screen | User Registration | User Settings |
+| Portal Entry (Staff Portal) | Login & SSO Screen | User Registration |
 | :---: | :---: | :---: | :---: |
-| ![Staff Portal Entry](assets/screenshots/00_staff_portal_landing.png) | ![Login Screen](assets/screenshots/01_login.png) | ![Register Screen](assets/screenshots/02_register.png) | ![Settings Screen](assets/screenshots/03_settings.png) |
+| ![Staff Portal Entry](<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/2eea382d-fe8d-45c8-a2ed-7f059d1bf4f5" />
+) | ![Login Screen](<img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/910b0bcc-59f3-473c-b9dc-da8a39565c45" />
+) | ![Register Screen](<img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/dd85fc10-e8ce-48e7-a272-086a8bfdfe58" />
+) 
 
 ---
-<img width="1351" height="597" alt="Autostock_web" src="https://github.com/user-attachments/assets/ff561529-ed73-4e82-907b-0865c1107809" />
 
 ---
 
