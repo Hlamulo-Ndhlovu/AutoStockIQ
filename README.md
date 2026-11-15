@@ -24,15 +24,16 @@
 
 ## 📱 System Screenshots & Walkthrough
 
-### 1. Portal Entry & Authentication (Landing, Login, Registration & SSO)
-*Role-separated portal entry ensuring staff and school accounts maintain dedicated sign-in experiences, backed by secure user registration, POPIA consent capture, encrypted password handling, and Single Sign-On.*
-Portal Entry( Staff Portal)
-<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/1c31996a-e1c3-4626-8857-fe43e3490eb5" />
+## 🖥️ System Screenshots & Walkthrough
 
-Login & User Registration
-<img width="402" height="544" alt="Screenshot 2026-10-19 063907" src="https://github.com/user-attachments/assets/9c351cc7-a9fd-4801-90df-552db5fa7331" />
+### 1. Staff Portal Entry & Authentication (Role Selection & Sign-In)
 
-<img width="436" height="546" alt="Screenshot 2026-10-19 063248" src="https://github.com/user-attachments/assets/9bc5de1b-f326-458c-85b5-313aa848a4c3" />
+*Role-separated portal entry ensuring staff and school accounts maintain dedicated sign-in experiences, allowing company users to select between Administrator and Sales roles before authenticating securely.*
+
+| Staff Portal Landing Page | Role Selection (Administrator / Sales) | Staff Sign-In Form |
+| :---: | :---: | :---: |
+| ![Staff Portal Landing](assets/screenshots/staff_landing_page.png) | ![Role Selection](assets/screenshots/staff_role_selection.png) | ![Staff Sign-In Form](assets/screenshots/staff_signin_form.png) |
+
 
 
 
