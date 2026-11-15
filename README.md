@@ -31,9 +31,9 @@
 
 * **Staff Portal Landing Page**
   <img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/74146fee-25ff-41ee-a242-d83e347314f2" />
+  
 
 * **Role Selection (Administrator / Sales)**
-<img width="439" height="383" alt="Screenshot 2026-11-15 083113" src="https://github.com/user-attachments/assets/ad5ad20f-381f-41f1-8280-47f15cb5a9c5" />
 <img width="440" height="406" alt="staff login" src="https://github.com/user-attachments/assets/5d5ee88b-91d7-4177-820f-84c95c2715d0" />
 
 
