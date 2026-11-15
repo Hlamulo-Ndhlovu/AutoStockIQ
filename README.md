@@ -29,8 +29,10 @@
 
 | Portal Entry (Staff Portal) | Login & SSO Screen | User Registration | User Settings |
 | :---: | :---: | :---: | :---: |
-|<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/4cae559b-2f36-492d-87cc-646a5d5d6239" />
-| <img width="440" height="406" alt="Screenshot 2026-11-15 082834" src="https://github.com/user-attachments/assets/b856ae76-96ce-4d3e-bfa5-3d569bd9c7be" /> | <img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/063b43ed-50ce-4e8e-ad55-71b3338f9b32" /> | ![Settings Screen](assets/screenshots/03_settings.png) |
+| ![Staff Portal Entry](assets/screenshots/00_staff_portal_landing.png) | ![Login Screen](assets/screenshots/01_login.png) | ![Register Screen](assets/screenshots/02_register.png) | ![Settings Screen](assets/screenshots/03_settings.png) |
+
+---
+<img width="1351" height="597" alt="Autostock_web" src="https://github.com/user-attachments/assets/ff561529-ed73-4e82-907b-0865c1107809" />
 
 ---
 
@@ -57,7 +59,8 @@
 
 | Kwena ka Bobedi Public Site | ASP.NET Core MVC Web Portal |
 | :---: | :---: |
-| ![Public Website](assets/screenshots/10_public_website.png) | ![MVC Portal](assets/screenshots/11_mvc_portal.png) |
+| ![Public Website](<img width="1351" height="597" alt="Autostock_web" src="https://github.com/user-attachments/assets/ca3a3446-31d8-4c91-ab0b-c9af6ef3f936" />
+) | ![MVC Portal](assets/screenshots/11_mvc_portal.png) |
 
 ---
 
@@ -91,10 +94,11 @@ All relational database tables are seeded and verified to ensure full transactio
 * [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
 * SQL Server / PostgreSQL / LocalDB instance
 
-### Local Development
-1. Clone the repository:
-   ```bash
- https://github.com/Hlamulo-Ndhlovu/AutoStockIQ.git
+## 👥 Team ProKreatives
+| Name | Student Number | Role |
+| :--- | :--- | :--- |
+| **Hlamulo Ndhlovu** | ST10354799 | Lead Full-Stack Developer |
+| **Simphiwe Dladla** | ST10270158 | Web Developer / Frontend & Project Manager |
+| **Mbuso Sihlali** | ST10346881 | Quality Assurance (QA) & System Integrator |
+| **Mudodzwa Matshakatini** | ST10440341 | UI/UX Designer & Documentation |
 
- 
-   cd AutoStockIQ
