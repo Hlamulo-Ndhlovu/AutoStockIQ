@@ -1,3 +1,4 @@
+<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/acabc969-08da-4715-bba7-5a11de71eb26" />
 # AutoStockIQ — Kwena ka Bobedi Inventory Management & Stock Control Ecosystem
 
 ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
