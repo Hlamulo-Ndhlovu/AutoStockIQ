@@ -29,54 +29,60 @@
 ### 1. Staff Portal Entry & Authentication (Role Selection & Sign-In)
 *Role-separated portal entry ensuring staff and school accounts maintain dedicated sign-in experiences, allowing company users to select between Administrator and Sales roles before authenticating securely.*
 
-* **Staff Portal Landing Page**
-  <img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/74146fee-25ff-41ee-a242-d83e347314f2" />
-  
-
-* **Role Selection (Administrator / Sales)**
-<img width="440" height="406" alt="staff login" src="https://github.com/user-attachments/assets/5d5ee88b-91d7-4177-820f-84c95c2715d0" />
+#### Staff Portal Landing Page
+<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/65875e49-877d-4440-be40-d15dc4e64624" />
 
 
-* **Staff Sign-In Form**
-<img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/889f6f3d-63b7-48a1-a167-4261ed4723cf" />
+#### Role Selection (Administrator / Sales)
+<img width="440" height="406" alt="staff login" src="https://github.com/user-attachments/assets/327c8d67-eb1b-4dd5-ad81-285c995450c5" />
+
+
+#### Staff Sign-In Form
+<img width="439" height="383" alt="staff_Login_admin" src="https://github.com/user-attachments/assets/097e3bd4-8383-4503-8cc7-9eedc4956dc4" />
+
+
 ---
 
 ### 2. School & Business Client Portal (Catalogue & Ordering)
 *Real-time stock visibility, line-item order placement, and automated order tracking (`ORD-XXXX`).*
 
-* **Live Stock Catalogue**
-  ![Live Stock Catalogue](assets/screenshots/04_catalogue.png)
+#### Live Stock Catalogue
+<img width="1171" height="635" alt="Screenshot 2026-11-10 205207" src="https://github.com/user-attachments/assets/b748509a-60be-4db5-84c5-c2f2de34a619" />
 
-* **Place Order Flow**
-  ![Place Order Flow](assets/screenshots/05_place_order.png)
 
-* **Order History & Status**
-  ![Order History & Status](assets/screenshots/06_order_history.png)
+
+#### Place Order Flow
+![Place Order Flow](assets/screenshots/place_order.png)
+
+#### Order History & Status
+![Order History and Status](assets/screenshots/order_history.png)
 
 ---
 
 ### 3. Company Admin & Sales Operations
 *Order approval/rejection workflows, low-stock alerts, and stock replenishment.*
 
-* **Admin Dashboard**
-  ![Admin Dashboard](assets/screenshots/07_admin_dashboard.png)
+#### Admin Dashboard
+<img width="445" height="509" alt="Ad_dasboard" src="https://github.com/user-attachments/assets/f17a0ec1-10db-479d-8e78-a8f946abe080" />
 
-* **Pending Order Approval**
-  ![Pending Order Approval](assets/screenshots/08_order_approval.png)
 
-* **Stock Refill & Alerts**
-  ![Stock Refill & Alerts](assets/screenshots/09_stock_refill.png)
+#### Pending Order Approval
+![Pending Order Approval](assets/screenshots/order_approval.png)
+
+#### Stock Refill & Alerts
+![Stock Refill and Alerts](assets/screenshots/stock_refill.png)
 
 ---
 
 ### 4. Public Website & Web Portal
 *Stakeholder-facing marketing website and browser-based MVC interface.*
 
-* **Kwena ka Bobedi Public Site**
-  ![Kwena ka Bobedi Public Site](assets/screenshots/10_public_website.png)
+#### Kwena ka Bobedi Public Site
+<img width="1351" height="597" alt="Screenshot 2026-11-15 092300" src="https://github.com/user-attachments/assets/3a905644-e4d5-46cd-a0f0-97d7f8bbcc4e" />
 
-* **ASP.NET Core MVC Web Portal**
-  ![ASP.NET Core MVC Web Portal](assets/screenshots/11_mvc_portal.png)
+
+#### ASP.NET Core MVC Web Portal
+![ASP.NET Core MVC Web Portal](assets/screenshots/mvc_portal.png)
 
 ---
 
@@ -85,12 +91,12 @@
 ### Automated Testing & CI/CD (GitHub Actions)
 Every push and pull request triggers our automated GitHub Actions pipeline to compile the solution and execute unit/integration test suites.
 
-![GitHub Actions Pipeline](assets/screenshots/12_github_actions_pass.png)
+![GitHub Actions Pipeline](assets/screenshots/github_actions_pass.png)
 
 ### Database Verification ($\ge 10$ Records per Table)
 All relational database tables are seeded and verified to ensure full transactional integrity and encrypted credential storage.
 
-![Database Records Proof](assets/screenshots/13_database_tables.png)
+![Database Records Proof](assets/screenshots/database_tables.png)
 
 ### System & Negative Testing Summary
 
