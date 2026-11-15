@@ -46,6 +46,16 @@
 ### 2. School & Business Client Portal (Catalogue & Ordering)
 *Real-time stock visibility, line-item order placement, and automated order tracking (`ORD-XXXX`).*
 
+### School landing Page
+<img width="436" height="507" alt="image" src="https://github.com/user-attachments/assets/c3419454-1660-446d-bdd3-d39bd396ede5" />
+<img width="381" height="358" alt="image" src="https://github.com/user-attachments/assets/b082584b-770d-432b-ae3e-c9bb96b00f4c" />
+
+### Registration and Business Sign-in
+<img width="431" height="487" alt="image" src="https://github.com/user-attachments/assets/bfa9af67-6591-45e6-acbc-ec82e4d6a5bb" />
+
+
+
+
 #### Live Stock Catalogue
 <img width="1171" height="635" alt="Screenshot 2026-11-10 205207" src="https://github.com/user-attachments/assets/b748509a-60be-4db5-84c5-c2f2de34a619" />
 
