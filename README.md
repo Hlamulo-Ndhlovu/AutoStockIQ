@@ -30,7 +30,8 @@
 
 | Portal Entry (Staff Portal) | Login & SSO Screen | User Registration | User Settings |
 | :---: | :---: | :---: | :---: |
-| ![Staff Portal Entry](assets/screenshots/00_staff_portal_landing.png) | ![Login Screen](assets/screenshots/01_login.png) | ![Register Screen](assets/screenshots/02_register.png) | ![Settings Screen](assets/screenshots/03_settings.png) |
+| ![Staff Portal Entry](<img width="234" height="303" alt="staff_landing_page" src="https://github.com/user-attachments/assets/4cae559b-2f36-492d-87cc-646a5d5d6239" />
+) | ![Login Screen](assets/screenshots/01_login.png) | ![Register Screen](assets/screenshots/02_register.png) | ![Settings Screen](assets/screenshots/03_settings.png) |
 
 ---
 
