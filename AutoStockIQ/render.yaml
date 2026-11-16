@@ -1,13 +1,12 @@
+# Prefer the root render.yaml when connecting the GitHub repo on Render.
 services:
-  # ASP.NET Core Web Service
   - type: web
     name: autostockiq
-    runtime: dotnet
+    runtime: docker
     plan: free
-    buildCommand: dotnet publish -c Release -o out
-    startCommand: dotnet out/AutoStockIQ.dll
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      - key: ASPNETCORE_URLS
-        value: http://0.0.0.0:10000

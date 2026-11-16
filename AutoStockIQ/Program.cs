@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,24 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Render (and most PaaS hosts) inject PORT at runtime — bind Kestrel to it.
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
-connectionString = ResolveSqlitePath(connectionString, builder.Environment.ContentRootPath);
+// Prefer a mounted disk path on Render when provided (e.g. /var/data/autostockiq.db).
+var dataDirectory = Environment.GetEnvironmentVariable("DATA_DIRECTORY");
+if (!string.IsNullOrWhiteSpace(dataDirectory))
+{
+    Directory.CreateDirectory(dataDirectory);
+    connectionString = $"Data Source={Path.Combine(dataDirectory, "autostockiq.db")}";
+}
+else
+{
+    connectionString = ResolveSqlitePath(connectionString, builder.Environment.ContentRootPath);
+}
 
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
 if (!builder.Environment.IsDevelopment() && allowedOrigins.Length == 0)
@@ -40,11 +56,20 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Render / reverse proxies; trust edge headers so HTTPS and client IP work.
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/school/login";
     options.AccessDeniedPath = "/";
     options.SlidingExpiration = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Events.OnRedirectToLogin = context =>
     {
         var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
@@ -174,6 +199,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
+
 await DbInitializer.InitializeAsync(app.Services, app.Configuration);
 
 if (!app.Environment.IsDevelopment())
@@ -182,7 +209,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Behind Render's TLS terminator the app speaks HTTP; skip redirect loops in production.
+if (app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -1,11 +1,14 @@
 services:
-  # ASP.NET Core Web Service
   - type: web
     name: autostockiq
     runtime: docker
     plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      - key: ASPNETCORE_URLS
-        value: http://0.0.0.0:80
+      # Optional: attach a Render Disk at /var/data and uncomment to keep SQLite across deploys
+      # - key: DATA_DIRECTORY
+      #   value: /var/data

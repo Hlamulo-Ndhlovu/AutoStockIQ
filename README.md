@@ -126,30 +126,38 @@ All relational database tables are seeded and verified to ensure full transactio
 
 ### Prerequisites
 * [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
-* SQL Server / PostgreSQL / LocalDB instance
 
 ### Local Development
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/AutoStockIQ.git
+   git clone https://github.com/Hlamulo-Ndhlovu/AutoStockIQ.git
    cd AutoStockIQ
    ```
-2. Update the database connection string in `appsettings.json`.
-3. Apply Entity Framework migrations and seed data:
+2. Open `AutoStockIQ.sln` in Visual Studio, or run:
    ```bash
-   dotnet ef database update
+   dotnet run --project AutoStockIQ/AutoStockIQ.csproj
    ```
-4. Run the application:
-   ```bash
-   dotnet run
-   ```
+3. SQLite database `autostockiq.db` is created automatically on first start.
 
-### Deployment on Render
-1. Connect your GitHub repository to a new **Web Service** on [Render](https://render.com).
-2. Set the **Environment** to `.NET Core / Docker`.
-3. Configure the Build Command: `dotnet publish -c Release -o out`
-4. Configure the Start Command: `dotnet out/AutoStockIQ.dll`
-5. Add your production database connection string under Render **Environment Variables**.
+### Deploy on Render (Docker)
+
+1. In [Render Dashboard](https://dashboard.render.com) → **New** → **Web Service**.
+2. Connect the GitHub repo `Hlamulo-Ndhlovu/AutoStockIQ`.
+3. Settings:
+   - **Runtime:** Docker
+   - **Dockerfile path:** `./Dockerfile` (repo root)
+   - **Branch:** `main`
+   - **Instance type:** Free (or Starter)
+4. Environment:
+   - `ASPNETCORE_ENVIRONMENT` = `Production`
+5. Click **Create Web Service** and wait for the build/deploy.
+6. Open the `*.onrender.com` URL. Staff logins:
+   - Admin: `admin@autostockiq.co.za` / `ChangeMe!123`
+   - Sales: `sales@autostockiq.co.za` / `ChangeMe!123`
+
+**Database note:** The app uses **SQLite**. On Render’s free plan the filesystem is ephemeral, so the database resets when the service redeploys or sleeps. To keep data, attach a **Render Disk** at `/var/data` and set `DATA_DIRECTORY=/var/data`, or move to Render PostgreSQL later.
+
+You can also deploy from `render.yaml` via **New** → **Blueprint**.
 
 ---
 
